@@ -7,6 +7,7 @@ return array(
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
         'Application',
+	//'ScnSocialAuth',
         'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',

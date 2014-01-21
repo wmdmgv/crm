@@ -21,3 +21,8 @@ VALUES
     (2, 1, 'user'),
     (3, 2, 'moderator'), 
     (4, 3, 'administrator');
+
+
+for social login add to  composer.json
+
+   "socalnick/scn-social-auth": "dev-master",

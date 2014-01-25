@@ -1,0 +1,20 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12"><br><br>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ translate('User') }}
+            </div><br><br>
+            <div class="panel-body">
+                {{ translate('User Name') }} {{ user.username|e }} <br>
+                {{ translate('display Name') }} {{ user.displayName|e }}<br>
+                {{ translate('E-mail') }} {{ user.email|e }}<br>
+                {{ translate('Created') }} [{{ user.created|date('d.m.Y H:i') }}]<br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

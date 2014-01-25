@@ -1,0 +1,12 @@
+{% extends 'layout/layout.twig' %}
+{% import 'macros/forms.twig' as forms %}
+
+{% block content %}
+    <h1>Are you sure that you want to restore {{ user.username }} with id: {{ user.id }}?</h1>
+
+    <form method="post" action="{{ url('users', {'action': 'restore', 'id': user.id}) }}">
+        {{ forms.input('id', user.id, 'hidden') }}
+        {{ forms.input('res', 'Yes', 'submit') }}
+        {{ forms.input('res', 'No', 'submit') }}
+    </form>
+{% endblock content %}

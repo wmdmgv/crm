@@ -33,6 +33,7 @@
                         <ul class="nav">
                             <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
                             <li class="active"><a href="<?php echo $this->url('blog') ?>"><?php echo $this->translate('Blog') ?></a></li>
+                            <li class="active"><a href="<?php echo $this->url('users') ?>"><?php echo $this->translate('Users') ?></a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -43,7 +44,10 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy; 2005 - <?php echo date('Y') ?> by WMD. <?php echo $this->translate('All rights reserved.') ?>
+                [<a href="/application/locale/ru">ru</a> | <a href="/application/locale/en">en</a>]
+                </p>
+
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

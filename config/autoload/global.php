@@ -12,5 +12,26 @@
  */
 
 return array(
-    // ...
+    'service_manager' => array(
+        'factories' => array(
+            'Zend\Log\Logger' => function($sm){
+                    $logger = new Zend\Log\Logger;
+                    $writer = new Zend\Log\Writer\Stream('./data/log/'.date('Y-m-d').'-error.log');
+
+                    $logger->addWriter($writer);
+
+                    return $logger;
+                },
+        ),
+    ),
+    'languages'=> array(
+        'ru' => array(
+            'name' => 'russian',
+            'locale' => 'ru_RU',
+        ),
+        'en' => array(
+            'name' => 'english',
+            'locale' => 'en_US',
+        ),
+    ),
 );

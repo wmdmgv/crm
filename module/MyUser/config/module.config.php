@@ -1,4 +1,4 @@
-    <?php
+<?php
 return array(
     'doctrine' => array(
         'driver' => array(
@@ -6,13 +6,46 @@ return array(
                 'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => array(__DIR__ . '/../src/MyUser/Entity')
             ),
-
             'orm_default' => array(
                 'drivers' => array(
                     'MyUser\Entity' => 'zfcuser_entity',
                 )
             )
         )
+    ),
+
+    'controllers' => array(
+        'invokables' => array(
+            'MyUser\Controller\Users' => 'MyUser\Controller\UserController',
+        ),
+    ),
+
+    'router' => array(
+        'routes' => array(
+            'users' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/users[/][:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'MyUser\Controller\Users',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
+
+    'view_manager' => array(
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+            'ZfcTwigViewStrategy',
+        ),
     ),
 
     'zfcuser' => array(

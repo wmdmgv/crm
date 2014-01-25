@@ -11,6 +11,8 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": ">2.2.0rc1",
         "zendframework/zend-developer-tools": "dev-master",
+        "hybridauth/hybridauth": "dev-master",
+        "socalnick/scn-social-auth": "1.12.0",
         "doctrine/common": ">=2.1",
         "doctrine/doctrine-orm-module": "0.7.*",
         "zf-commons/zfc-base": "v0.1.2",

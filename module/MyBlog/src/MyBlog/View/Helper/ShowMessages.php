@@ -13,19 +13,19 @@ class ShowMessages extends AbstractHelper
         $messages = $messenger->getMessages();
         $result = '';
         if (count($error_messages)) {
-            $result .= '<ul class="error">';
+            $result .= '<div class="alert alert-danger">';
             foreach ($error_messages as $message) {
-                $result .= '<li>' . $message . '</li>';
+                $result .= '<span>' . $message . '</span>';
             }
-            $result .= '</ul>';
+            $result .= '</div>';
         }
 
         if (count($messages)) {
-            $result .= '<ul>';
+            $result .= '<div class="alert alert-success">';
             foreach ($messages as $message) {
-                $result .= '<li>' . $message . '</li>';
+                $result .= '<span>' . $message . '</span>';
             }
-            $result .= '</ul>';
+            $result .= '</div>';
         }
 
         return $result;

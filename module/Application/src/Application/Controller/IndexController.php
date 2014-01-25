@@ -18,4 +18,10 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+
+    public function ruAction()
+    {
+        print_r($_SESSION);
+        return new ViewModel();
+    }
 }

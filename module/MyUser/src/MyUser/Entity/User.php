@@ -57,8 +57,15 @@ class User implements UserInterface, ProviderInterface
 
     /**
      * @var int
+     * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
      */
-    protected $state;
+    protected $created;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", options={"default" = 1})
+     */
+    protected $state = 1;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -230,5 +237,53 @@ class User implements UserInterface, ProviderInterface
     public function addRole($role)
     {
         $this->roles[] = $role;
+    }
+
+    /**
+     * Helper function.
+     */
+    public function exchangeArray($data)
+    {
+        foreach ($data as $key => $val) {
+            if (property_exists($this, $key)) {
+                $this->$key = ($val !== null) ? $val : null;
+            }
+        }
+    }
+
+    /**
+     * Helper function
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+    //WMD TODO:
+    public function setRole($role) {
+
+
+
+
+//        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+//
+//        $blogpost = new \MyBlog\Entity\BlogPost();
+//
+//        $blogpost->exchangeArray($form->getData());
+//
+//        $blogpost->setCreated(time());
+//        $blogpost->setUserId(0);
+//
+//        $objectManager->persist($blogpost);
+//        $objectManager->flush();
+//
+//        $obj = new UserRoleLinker();
+//        $obj->setTitle('TEST title');
+//        $author = $database->find('User', 1);
+//
+//        $author->addNews($obj);
+//
+//        //merge changes on author entity directly
+//        $em->merge($author);
     }
 }

@@ -35,8 +35,8 @@ return array(
                 ),
                 array(
                     'controller' => 'zfcuser',
-                    'action' => array('logout'),
-                    'roles' => array('user'),
+                    'action' => array('logout','changepassword', 'changeemail'),
+                    'roles' => array('user','guest'),
                 ),
 
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
@@ -44,12 +44,29 @@ return array(
                 array(
                     'controller' => 'MyBlog\Controller\BlogPost',
                     'action' => array('index', 'view'),
-                    'roles' => array('guest', 'user'),
+                    'roles' => array('guest', 'user', 'administrator'),
                 ),
 
                 array(
                     'controller' => 'MyBlog\Controller\BlogPost',
                     'action' => array('add', 'edit', 'delete'),
+                    'roles' => array('administrator'),
+                ),
+
+                //WMD
+                array(
+                    'controller' => 'DoctrineORMModule\Yuml\YumlController',
+                    'action' => array('index'),
+                    'roles' => array('administrator')
+                ),
+                array(
+                    'controller' => 'Application\Controller\Locale',
+                    'action' => array('index', 'ru', 'en'),
+                    'roles' => array()
+                ),
+                array(
+                    'controller' => 'MyUser\Controller\Users',
+                    'action' => array('index', 'view', 'add', 'edit', 'delete','restore'),
                     'roles' => array('administrator'),
                 ),
             ),

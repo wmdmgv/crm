@@ -62,7 +62,7 @@ return array(
         ),
     ),
     'translator' => array(
-        'locale' => 'en_US',
+        'locale' => 'ru_RU', //en_US
         'translation_file_patterns' => array(
             array(
                 'type'     => 'gettext',
@@ -73,9 +73,17 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Locale' => 'Application\Controller\LocaleController'
         ),
     ),
+
+    'view_helpers' => array(
+        'invokables' => array(
+            'showRoute' => 'Application\View\Helper\ShowRoute',
+        ),
+    ),
+
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,

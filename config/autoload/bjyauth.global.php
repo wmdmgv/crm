@@ -66,9 +66,11 @@ return array(
                 ),
                 array(
                     'controller' => 'MyUser\Controller\Users',
-                    'action' => array('index', 'view', 'add', 'edit', 'delete','restore'),
+                    'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
                     'roles' => array('administrator'),
                 ),
+
+
             ),
         ),
     ),

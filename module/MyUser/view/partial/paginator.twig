@@ -1,0 +1,50 @@
+{% if pageCount %}
+<div class="pagination pagination-centered">
+    <ul class="pagination">
+        <!-- Previous page link -->
+        {% if previous %}
+        <li class="paginate_button previous">
+            <a href="{{ url('users', {'page': previous}) }}">
+                <<
+            </a>
+        </li>
+        {% else %}
+        <li class="paginate_button previous disabled">
+            <a href="#">
+                <<
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- Numbered page links -->
+        {% for page in pagesInRange %}
+        {% if page != current %}
+        <li class="paginate_button">
+            <a href="{{ url('users', {'page': page}) }}">
+                {{ page }}
+            </a>
+        </li>
+        {% else %}
+        <li class="paginate_button active">
+            <a href="#">{{ page }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Next page link -->
+        {% if next %}
+        <li  class="paginate_button next">
+            <a href="{{ url('users', {'page': next}) }}">
+                >>
+            </a>
+        </li>
+        {% else %}
+        <li  class="paginate_button next disabled" >
+            <a href="#">
+                >>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

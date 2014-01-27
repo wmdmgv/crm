@@ -26,3 +26,5 @@ VALUES
 for social login add to  composer.json
 
    "socalnick/scn-social-auth": "dev-master",
+
+3. http://zf2cheatsheet.com

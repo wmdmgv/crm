@@ -25,7 +25,7 @@ return array(
             'users' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/users[/][:action][/:id]',
+                    'route'    => '/users[/][page/:page][:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -33,9 +33,11 @@ return array(
                     'defaults' => array(
                         'controller' => 'MyUser\Controller\Users',
                         'action'     => 'index',
+                        'page' => 1,
                     ),
                 ),
             ),
+
         ),
     ),
 

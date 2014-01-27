@@ -81,6 +81,7 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'showRoute' => 'Application\View\Helper\ShowRoute',
+            'paginator' => 'Application\View\Helper\Paginator',
         ),
     ),
 

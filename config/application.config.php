@@ -15,6 +15,7 @@ return array(
         'MyUser',
         'MyDevice',
         'MyFirm',
+        'MyClient',
         'ZfcTwig',
     ),
 

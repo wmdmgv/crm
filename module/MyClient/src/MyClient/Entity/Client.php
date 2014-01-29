@@ -1,10 +1,10 @@
 <?php
 /**
- * Firms
+ * Clients
  *
  */
 
-namespace MyFirm\Entity;
+namespace MyClient\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,11 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  * An example of how to implement a role aware user entity.
  *
  * @ORM\Entity
- * @ORM\Table(name="firm")
+ * @ORM\Table(name="client")
  *
  * @author Gleb Metlov <glebm@mail.ru>
  */
-class Firm
+class Client
 {
     /**
      * @var int
@@ -28,10 +28,40 @@ class Firm
     protected $id;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    protected $user_id;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    protected $firm_id;
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=64, unique=true)
      */
     protected $name;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $email;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $phone;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $address;
 
     /**
      * @var string
@@ -76,6 +106,50 @@ class Firm
     }
 
     /**
+     * Get user_id.
+     *
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * Set user_id.
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = (int) $user_id;
+    }
+
+    /**
+     * Get firm_id.
+     *
+     * @return int
+     */
+    public function getFirmId()
+    {
+        return $this->firm_id;
+    }
+
+    /**
+     * Set firm_id.
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function setFirmId($firm_id)
+    {
+        $this->firm_id = (int) $firm_id;
+    }
+
+    /**
      * Get username.
      *
      * @return string
@@ -95,6 +169,72 @@ class Firm
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set email.
+     *
+     * @param string $email
+     *
+     * @return void
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * Get phone.
+     *
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set phone.
+     *
+     * @param string $email
+     *
+     * @return void
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * Get address.
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set address.
+     *
+     * @param string $email
+     *
+     * @return void
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
     }
 
     /**

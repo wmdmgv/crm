@@ -69,8 +69,16 @@ return array(
                     'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
                     'roles' => array('administrator'),
                 ),
-
-
+                array(
+                    'controller' => 'MyDevice\Controller\Devices',
+                    'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
+                    'roles' => array('administrator'),
+                ),
+                array(
+                    'controller' => 'MyFirm\Controller\Firms',
+                    'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
+                    'roles' => array('administrator'),
+                ),
             ),
         ),
     ),

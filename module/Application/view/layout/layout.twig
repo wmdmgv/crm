@@ -46,6 +46,8 @@
     <li>
         <ul><li class="{% if curRoute() =='home' %}active{% endif %}"><a href="{{ url('home') }}">{{ translate('Home') }}</a></li>
             <li class="{% if curRoute() =='blog' %}active{% endif %}"><a href="{{ url('blog') }}">{{ translate('Blog') }}</a></li>
+            <li class="{% if curRoute() =='firms' %}active{% endif %}"><a href="{{ url('firms') }}">{{ translate('Firms') }}</a></li>
+            <li class="{% if curRoute() =='devices' %}active{% endif %}"><a href="{{ url('devices') }}">{{ translate('Devices') }}</a></li>
             <li class="{% if curRoute() =='users' %}active{% endif %}"><a href="{{ url('users') }}">{{ translate('Users') }}</a></li>
         </ul>
     </li>

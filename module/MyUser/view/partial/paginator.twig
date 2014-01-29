@@ -4,7 +4,7 @@
         <!-- Previous page link -->
         {% if previous %}
         <li class="paginate_button previous">
-            <a href="{{ url('users', {'page': previous}) }}">
+            <a href="{{ url(route, {'page': previous}) }}">
                 <<
             </a>
         </li>
@@ -20,7 +20,7 @@
         {% for page in pagesInRange %}
         {% if page != current %}
         <li class="paginate_button">
-            <a href="{{ url('users', {'page': page}) }}">
+            <a href="{{ url(route, {'page': page}) }}">
                 {{ page }}
             </a>
         </li>
@@ -34,7 +34,7 @@
         <!-- Next page link -->
         {% if next %}
         <li  class="paginate_button next">
-            <a href="{{ url('users', {'page': next}) }}">
+            <a href="{{ url(route, {'page': next}) }}">
                 >>
             </a>
         </li>
@@ -45,6 +45,9 @@
             </a>
         </li>
         {% endif %}
+        <li> {{ translate('total') }}: {{ totalItemCount }}</li>
     </ul>
+
 </div>
 {% endif %}
+

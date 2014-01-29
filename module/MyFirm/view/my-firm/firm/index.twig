@@ -1,0 +1,74 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-lg-12">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        {{ translate('Firms') }}
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+    <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Cooment</th>
+        <th>Status</th>
+        <th>Action <a href="/firms/add" class="btn btn-outline btn-primary btn-xs" type="button">Add firm</a></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if isAllowed('controller\/MyFirm\\Controller\\Firms:edit') %}
+        {% for firm in firms %}
+            <tr >
+                <td><a href="{{ url('firms', {'action': 'view', 'id': firm.id}) }}">{{ firm.id|e }}</a></td>
+                <td> {{ firm.name|e }}</td>
+                <td> {{ firm.comment|e }}</td>
+                <td> {% if firm.state == 0 %} <button class="btn  btn-danger btn-xs" type="button">{{ translate('deleted') }}</button>
+                    {% else %}
+                        <button class="btn  btn-primary btn-xs" type="button">{{ translate('actived') }}</button>
+                    {% endif %}</td>
+                <td>
+                    <a href="{{ url('firms', {'action': 'edit', 'id': firm.id}) }}"><button class="btn btn-success btn-xs" type="button">{{ translate('edit') }}</button></a>
+                    {% if firm.state == 1 %}
+                        <a href="{{ url('firms', {'action': 'delete', 'id': firm.id}) }}">
+                        <button class="btn btn-outline btn-danger btn-xs" type="button">{{ translate('delete') }}</button>
+                        </a>
+                    {% else %}
+                        <a href="{{ url('firms', {'action': 'restore', 'id': firm.id}) }}">
+                        <button class="btn btn-outline btn-primary btn-xs" type="button">{{ translate('restore') }}</button>
+                        </a>
+                    {% endif %}
+
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        {% for firm in firms %}
+            <tr>//WMD TODO:
+                <a href="{{ url('blog', {'action': 'view', 'id': firm.id}) }}">{{ firm.firmname|e }}</a>
+                [{{ firm.created|date('d.m.Y H:i') }}]
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
+        {{ paginator|raw }}
+    </div>
+    <!-- /.table-responsive -->
+
+    <div class="well">
+        <h4>Firm information</h4>
+        <p>You can edit and delete firms.</p>
+    </div>
+    </div>
+    <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+    </div>
+{% endblock content %}

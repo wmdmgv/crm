@@ -13,6 +13,8 @@ return array(
         'DoctrineORMModule',
         'MyBlog',
         'MyUser',
+        'MyDevice',
+        'MyFirm',
         'ZfcTwig',
     ),
 

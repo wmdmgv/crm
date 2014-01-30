@@ -9,7 +9,7 @@ class FirmForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('device');
+        parent::__construct('firm');
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new \MyFirm\Form\FirmInputFilter());
         $this->add(array(

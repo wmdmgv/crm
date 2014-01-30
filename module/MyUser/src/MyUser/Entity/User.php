@@ -259,24 +259,24 @@ class User implements UserInterface, ProviderInterface
         return get_object_vars($this);
     }
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     * @return Paginator
-     */
-    public function getPaginator($offset = 0, $limit = 20)
-    {
-        $dql = 'SELECT e FROM Application\\Domain\\Model\\Entity e ' .
-            'ORDER BY e.column ASC';
-
-        $query = $this->manager->createQuery($dql)
-            ->setMaxResults($limit)
-            ->setFirstResult($offset);
-
-        $paginator = new Paginator($query);
-
-        return $paginator;
-    }
+//    /**
+//     * @param int $offset
+//     * @param int $limit
+//     * @return Paginator
+//     */
+//    public function getPaginator($offset = 0, $limit = 20)
+//    {
+//        $dql = 'SELECT e FROM Application\\Domain\\Model\\Entity e ' .
+//            'ORDER BY e.column ASC';
+//
+//        $query = $this->manager->createQuery($dql)
+//            ->setMaxResults($limit)
+//            ->setFirstResult($offset);
+//
+//        $paginator = new Paginator($query);
+//
+//        return $paginator;
+//    }
 
     //WMD TODO:
     public function setRole($role) {

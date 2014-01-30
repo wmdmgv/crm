@@ -18,7 +18,7 @@ class DeviceController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $page = $this->params()->fromRoute('page');
-        $max = 5;
+        $max = 15;
 
         //---Paging with query
         $query = $objectManager->createQuery('SELECT f FROM \MyDevice\Entity\Device f ORDER by f.id ASC');

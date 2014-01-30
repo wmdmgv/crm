@@ -17,6 +17,7 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
+
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
 use ZendTest\XmlRpc\Server\Exception;
 
@@ -31,6 +32,11 @@ class Module implements
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        //Add twig extension
+        $serviceManager = $e->getApplication()->getServiceManager();
+        $twig = $serviceManager->get('ZfcTwigEnvironment');
+        $twig->addExtension(new \Application\View\Helper\TwigHelper);
 
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'initLocale'), 1);
 

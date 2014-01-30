@@ -82,6 +82,7 @@ class ClientController extends AbstractActionController
                 $client->exchangeArray($form->getData());
 
                 $client->setState(1);
+                $client->setUserId(1);
 
                 $objectManager->persist($client);
                 $objectManager->flush();

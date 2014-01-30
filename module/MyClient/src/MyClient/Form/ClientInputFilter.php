@@ -30,7 +30,7 @@ class ClientInputFilter extends InputFilter
 
         $this->add(array(
             'name' => 'comment',
-            'required' => true,
+            'required' => false,
             'validators' => array(
                 array(
                     'name' => 'StringLength',

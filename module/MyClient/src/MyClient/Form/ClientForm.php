@@ -9,7 +9,7 @@ class ClientForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('device');
+        parent::__construct('client');
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new \MyClient\Form\ClientInputFilter());
         $this->add(array(
@@ -22,6 +22,14 @@ class ClientForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'firm_id',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Firm',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'name',
             'type' => 'Text',
             'options' => array(
@@ -30,6 +38,31 @@ class ClientForm extends Form
                 'label' => 'Name',
             ),
         ));
+
+        $this->add(array(
+            'name' => 'phone',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Phone',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'email',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'E-mail',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'address',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Address',
+            ),
+        ));
+
         $this->add(array(
             'name' => 'comment',
             'type' => 'Textarea',

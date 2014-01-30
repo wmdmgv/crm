@@ -17,7 +17,7 @@ class DeviceInputFilter extends InputFilter
                     'name' => 'StringLength',
                     'options' => array(
                         'min' => 3,
-                        'max' => 64,
+                        'max' => 128,
                     ),
                 ),
             ),
@@ -30,12 +30,11 @@ class DeviceInputFilter extends InputFilter
 
         $this->add(array(
             'name' => 'comment',
-            'required' => true,
+            'required' => false,
             'validators' => array(
                 array(
                     'name' => 'StringLength',
                     'options' => array(
-                        'min' => 0,
                         'max' => 255,
                     ),
                 ),

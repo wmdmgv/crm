@@ -82,6 +82,7 @@ return array(
         'invokables' => array(
             'showRoute' => 'Application\View\Helper\ShowRoute',
             'paginator' => 'Application\View\Helper\Paginator',
+            'truncate' => 'Application\View\Helper\TwigHelper',
         ),
     ),
 
@@ -100,6 +101,10 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+//        'whoops_no_catch' => array(
+//                'BjyAuthorize\Exception\UnAuthorizedException',
+//                'AnotherException',
+//        )
     ),
     // Placeholder for console routes
     'console' => array(

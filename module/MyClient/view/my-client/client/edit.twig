@@ -4,7 +4,7 @@
 {% block content %}
     <h1>{{ client.name }}</h1>
 
-    <form method="{{ form.attributes.method }}" action="{{ url(clientms', {'action': 'edit', 'id': id}) }}" nameclientrm" iclientirm">
+    <form method="{{ form.attributes.method }}" action="{{ url('clients', {'action': 'edit', 'id': id}) }}" name="client" id="client">
         {% for element in form %}
             {{ forms.input(element.attributes.name, element.value, element.attributes.type, element.label, 20, element.messages) }}
         {% endfor %}

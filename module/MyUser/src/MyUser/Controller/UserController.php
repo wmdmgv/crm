@@ -18,7 +18,7 @@ class UserController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $page = $this->params()->fromRoute('page');
-        $max = 5;
+        $max = 10;
 
         //---Paging with query
         $query = $objectManager->createQuery('SELECT f FROM \MyUser\Entity\User f ORDER by f.id ASC');
@@ -152,12 +152,12 @@ class UserController extends AbstractActionController
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
             $post = $objectManager
-                ->getRepository('\MyBlog\Entity\BlogPost')
+                ->getRepository('\MyUser\Entity\User')
                 ->findOneBy(array('id' => $id));
 
             if (!$post) {
-                $this->flashMessenger()->addErrorMessage(sprintf('Blogpost with id %s doesn\'t exists', $id));
-                return $this->redirect()->toRoute('blog');
+                $this->flashMessenger()->addErrorMessage(sprintf('User with id %s doesn\'t exists', $id));
+                return $this->redirect()->toRoute('users');
             }
 
             // Fill form data.

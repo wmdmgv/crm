@@ -21,7 +21,7 @@ class DeviceController extends AbstractActionController
         $max = 15;
 
         //---Paging with query
-        $query = $objectManager->createQuery('SELECT f FROM \MyDevice\Entity\Device f ORDER by f.id ASC');
+        $query = $objectManager->createQuery('SELECT f FROM \MyDevice\Entity\Device f ORDER by f.state DESC, f.id ASC');
         $adapter = new DoctrinePaginator(new ORMPaginator($query));
         $paginator = new Paginator($adapter);
       //  var_dump($page);

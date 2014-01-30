@@ -21,7 +21,7 @@ class FirmController extends AbstractActionController
         $max = 5;
 
         //---Paging with query
-        $query = $objectManager->createQuery('SELECT f FROM \MyFirm\Entity\Firm f ORDER by f.id ASC');
+        $query = $objectManager->createQuery('SELECT f FROM \MyFirm\Entity\Firm f ORDER by f.state DESC, f.id ASC');
         $adapter = new DoctrinePaginator(new ORMPaginator($query));
         $paginator = new Paginator($adapter);
       //  var_dump($page);

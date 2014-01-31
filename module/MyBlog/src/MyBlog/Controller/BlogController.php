@@ -27,7 +27,7 @@ class BlogController extends AbstractActionController
         foreach ($posts as $post) {
             $posts_array[] = $post->getArrayCopy();
         }
-
+        //var_dump($this->zfcUserAuthentication()->getIdentity()->getId());
         $view = new ViewModel(array(
             'posts' => $posts_array,
         ));

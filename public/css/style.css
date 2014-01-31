@@ -1,6 +1,8 @@
 body {
 
     padding-bottom: 40px;
+    font-family: 'Nimbus Sans L',Times,Serif !important;
+    font-size: 11px !important;
 }
 
 .zf-green {
@@ -38,4 +40,39 @@ div.container a.brand {
 
 ul.nav.navbar-top-links.navbar-right li.active {
     font-weight: bold !important;
+}
+
+td {
+    line-height: 1 !important;
+
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+    vertical-align: sub !important;
+}
+td.disabled {
+    color: #cccccc;
+}
+
+button.nobutton {
+    cursor:default !important;
+}
+
+.form-control {
+    height: auto !important;
+    font-size: 12px !important;
+    line-height: 1.0;
+    padding: 2px 5px;
+}
+.form-group {
+    margin-bottom: 6px !important;
+}
+
+.form-group label {
+    margin-bottom: 0px !important;
+}
+
+.panel-body form {
+    margin-left:20px !important;
 }

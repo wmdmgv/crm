@@ -25,11 +25,11 @@
         {% for device in devices %}
             <tr >
                 <td><a href="{{ url('devices', {'action': 'view', 'id': device.id}) }}">{{ device.id|e }}</a></td>
-                <td> {{ device.name|e|slice(0, 75) }} {% if device.name|length > 75 %}...{% endif %}</td>
-                <td> {{ device.comment [:25] }} {% if device.comment|length > 25 %}...{% endif %}</td>
-                <td> {% if device.state == 0 %} <button class="btn  btn-danger btn-xs" type="button">{{ translate('deleted') }}</button>
+                <td> {{ device.name|e|slice(0, 120) }} {% if device.name|length > 120 %}...{% endif %}</td>
+                <td> {{ device.comment [:64] }} {% if device.comment|length > 64 %}...{% endif %}</td>
+                <td> {% if device.state == 0 %} <button class="btn  btn-danger btn-xs nobutton" type="button">{{ translate('deleted') }}</button>
                     {% else %}
-                        <button class="btn  btn-primary btn-xs" type="button">{{ translate('actived') }}</button>
+                        <button class="btn  btn-primary btn-xs nobutton" type="button">{{ translate('actived') }}</button>
                     {% endif %}</td>
                 <td>
                     <a href="{{ url('devices', {'action': 'edit', 'id': device.id}) }}"><button class="btn btn-success btn-xs" type="button">{{ translate('edit') }}</button></a>

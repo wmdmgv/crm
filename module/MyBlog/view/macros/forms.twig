@@ -1,27 +1,47 @@
-{% macro input(name, value, type, label, size, messages) %}
+{% macro input(name, value, type, label, size, messages, options, attributes, selected) %}
     {% if type != 'hidden' %}
-        <div class="form-element-{{ name }}">
+        {% if type != 'submit' %}
+            <div class="form-group {% if messages|length > 0 %}has-error{% endif %} form-element-{{ name }}">
+        {% endif %}
     {% endif %}
 
     {% if label %}
-        {{ label }}:
+        <label>{{ label }}:</label>
     {% endif %}
 
     {% if type == 'textarea' %}
-        <textarea name="{{ name }}" size="{{ size|default(20) }}" {% if messages|length > 0 %}class="error"{% endif %}/>{{ value|e }}</textarea>
+        <textarea name="{{ name }}" rows=3 size="{{ size|default(20) }}" class="form-control{% if messages|length > 0 %} error{% endif %}"/>{{ value|e }}</textarea>
     {% elseif type == 'checkbox' %}
         <input type="{{ type }}" name="{{ name }}" value="1"{% if value == true %} checked="checked"{% endif %} {% if messages|length > 0 %}class="error"{% endif %}/>
+    {% elseif type == 'select' %}
+        {{ selected }}
+        <select name="{{ name }}"  class="form-control">
+        {% if options.empty_option %}<option>{{ options.empty_option }}</option>{% endif %}
+        {% for key_opt,val_opt in options.value_options %}
+
+           <option value="{{ key_opt }}" {% if key_opt == selected %}selected{% endif %}>{{ val_opt }}</option>
+
+        {% endfor %}
+        </select>
+    {% elseif type == 'submit' %}
+        {% if name != 'reset' %}
+            <input class="btn btn-default" type="submit" name="{{ name }}" value="{{ value|e }}" >
+        {% else %}
+            <input class="btn btn-default" type="reset" name="{{ name }}" value="{{ value|e }}">
+        {% endif %}
     {% else %}
-        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" {% if messages|length > 0 %}class="error"{% endif %}/>
+        {% if type != 'hidden' %}{%  endif %}<input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" class="form-control{% if messages|length > 0 %} error{% endif %}" {% if options.placeholder %}placeholder="{{ options.placeholder }}"{% endif %} {% if attributes.required != '' %}required{%  endif %} {% if attributes.type != '' %}type="{{ attributes.type }}"{%  endif %} {% if attributes.pattern != '' %}pattern="{{ attributes.pattern }}"{%  endif %}/>
     {% endif %}
 
     {% if type != 'hidden' %}
-        </div>
+        {% if type != 'submit' %}
+            </div>
+        {%  endif %}
     {%  endif %}
     {% if messages|length > 0 %}
-        <ul>
+        <ul class="help-block">
             {% for m in messages %}
-                <li>{{ m }}</li>
+                <li class="text-danger">{{ m }}</li>
             {% endfor %}
         </ul>
     {% endif %}

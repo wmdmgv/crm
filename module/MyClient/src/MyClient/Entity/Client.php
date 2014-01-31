@@ -28,16 +28,28 @@ class Client
     protected $id;
 
     /**
-     * @var int
+     * @var type
      * @ORM\Column(type="integer")
      */
     protected $user_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\MyUser\Entity\User", cascade={"all"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @var int
      * @ORM\Column(type="integer")
      */
     protected $firm_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\MyFirm\Entity\Firm", cascade={"all"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="firm_id", referencedColumnName="id")
+     */
+    private $firm;
 
     /**
      * @var string
@@ -76,6 +88,18 @@ class Client
     protected $state = 1;
 
     /**
+     * @var float
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    protected $balance;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", options={"default" = 1})
+     */
+    protected $use_balance= 1;
+
+    /**
      * Initialies
      */
     public function __construct()
@@ -110,7 +134,7 @@ class Client
      *
      * @return int
      */
-    public function getUserId()
+    public function getUser_Id()
     {
         return $this->user_id;
     }
@@ -122,7 +146,7 @@ class Client
      *
      * @return void
      */
-    public function setUserId($user_id)
+    public function setUser_Id($user_id)
     {
         $this->user_id = (int) $user_id;
     }
@@ -132,7 +156,7 @@ class Client
      *
      * @return int
      */
-    public function getFirmId()
+    public function getFirm_Id()
     {
         return $this->firm_id;
     }
@@ -144,9 +168,55 @@ class Client
      *
      * @return void
      */
-    public function setFirmId($firm_id)
+    public function setFirm_Id($firm_id)
     {
         $this->firm_id = (int) $firm_id;
+    }
+
+
+
+    /**
+     * Get firm.
+     *
+     * @return int
+     */
+    public function getFirm()
+    {
+        return $this->firm;
+    }
+
+    /**
+     * Get firm.
+     *
+     * @return int
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user.
+     *
+     * @param object $user
+     *
+     * @return void
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Set firm.
+     *
+     * @param object $firm
+     *
+     * @return void
+     */
+    public function setFirm($firm)
+    {
+        $this->firm = $firm;
     }
 
     /**
@@ -279,6 +349,51 @@ class Client
     {
         $this->state = $state;
     }
+
+    /**
+     * Get balance.
+     *
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * Set balance.
+     *
+     * @param float $balance
+     *
+     * @return void
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+    }
+
+    /**
+     * Get use_balance.
+     *
+     * @return int
+     */
+    public function getUse_Balance()
+    {
+        return $this->use_balance;
+    }
+
+    /**
+     * Set use_balance.
+     *
+     * @param int $use_balance
+     *
+     * @return int
+     */
+    public function setUse_Balance($use_balance)
+    {
+        $this->use_balance = $use_balance;
+    }
+
     /**
      * Helper function.
      */
@@ -298,4 +413,13 @@ class Client
     {
         return get_object_vars($this);
     }
+
+    public function __get($property) {
+        return $this->$property;
+    }
+
+    public function __set($property, $value) {
+        $this->$property = $value;
+    }
+
 }

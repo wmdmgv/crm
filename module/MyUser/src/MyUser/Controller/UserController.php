@@ -79,19 +79,19 @@ class UserController extends AbstractActionController
         }
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-        $post = $objectManager
+        /** @var \MyUser\Entity\User $user */
+        $user = $objectManager
             ->getRepository('\MyUser\Entity\User')
             ->findOneBy(array('id' => $id));
 
-        if (!$post) {
+        if (!$user) {
             $this->flashMessenger()->addErrorMessage(sprintf('User with id %s doesn\'t exists', $id));
             return $this->redirect()->toRoute('users');
         }
-
+//var_dump($user->getRoles());
         // Render template.
         $view = new ViewModel(array(
-            'user' => $post->getArrayCopy(),
+            'user' => $user->getArrayCopy(),
         ));
 
         return $view;

@@ -6,7 +6,7 @@
 
     <form method="{{ form.attributes.method }}" action="{{ url('blog', {'action': 'edit', 'id': id}) }}" name="blogpost" id="blogpost">
         {% for element in form %}
-            {{ forms.input(element.attributes.name, element.value, element.attributes.type, element.label, 20, element.messages) }}
+            {{ forms.input(element.attributes.name, element.value, element.attributes.type, element.label, 20, element.messages, element.options, element.attributes) }}
         {% endfor %}
     </form>
 {% endblock content %}

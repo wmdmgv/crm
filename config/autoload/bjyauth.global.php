@@ -82,7 +82,7 @@ return array(
                 array(
                     'controller' => 'MyClient\Controller\Clients',
                     'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
-                    'roles' => array('administrator'),
+                    'roles' => array('administrator','moderator'),
                 ),
             ),
         ),

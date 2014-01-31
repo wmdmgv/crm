@@ -28,3 +28,7 @@ for social login add to  composer.json
    "socalnick/scn-social-auth": "dev-master",
 
 3. http://zf2cheatsheet.com
+   http://docs.doctrine-project.org/en/2.0.x/reference/annotations-reference.html#annref-manytoone
+   http://zf2.com.ua/doc/161
+   http://twig.sensiolabs.org/doc/templates.html
+   http://paperplane.su/advantages-twig/

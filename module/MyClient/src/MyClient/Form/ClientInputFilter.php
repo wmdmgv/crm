@@ -50,5 +50,9 @@ class ClientInputFilter extends InputFilter
             'name' => 'state',
             'required' => false,
         ));
+        $this->add(array(
+            'name' => 'use_balance',
+            'required' => false,
+        ));
     }
 }

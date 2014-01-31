@@ -10,6 +10,9 @@ use Zend\Paginator\Paginator;
 
 use MyClient\Entity;
 
+use Zend\Form\Element;
+use Zend\Form\Form;
+
 class ClientController extends AbstractActionController
 {
     private $repository;
@@ -21,7 +24,7 @@ class ClientController extends AbstractActionController
         $max = 5;
 
         //---Paging with query
-        $query = $objectManager->createQuery('SELECT f FROM \MyClient\Entity\Client f ORDER by f.id ASC');
+        $query = $objectManager->createQuery('SELECT f FROM \MyClient\Entity\Client f ORDER by f.state DESC, f.id ASC');
         $adapter = new DoctrinePaginator(new ORMPaginator($query));
         $paginator = new Paginator($adapter);
       //  var_dump($page);
@@ -30,6 +33,7 @@ class ClientController extends AbstractActionController
             ->setItemCountPerPage($max);
 
         $pgCntrl = $this->getServiceLocator()->get('viewhelpermanager')->get('paginationcontrol');
+       // var_dump($paginator->getItemsByPage($page));
         $view = new ViewModel(array(
             'clients' => $paginator,
             'paginator' => $pgCntrl($paginator, 'sliding', array('partial/paginator.twig', 'Clients'), array('route' => 'clients'))
@@ -56,7 +60,10 @@ class ClientController extends AbstractActionController
             $this->flashMessenger()->addErrorMessage(sprintf('Client with id %s doesn\'t exists', $id));
             return $this->redirect()->toRoute('clients');
         }
-
+        /** @var \MyUser\Entity\User $user */
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        var_dump($user->getRoles());
+        //var_dump($client);
         // Render template.
         $view = new ViewModel(array(
             'client' => $client->getArrayCopy(),
@@ -70,6 +77,45 @@ class ClientController extends AbstractActionController
         $form = new \MyClient\Form\ClientForm();
         $form->get('submit')->setValue('Add');
 
+//        $form->add(array(
+//            'type' => 'Zend\Form\Element\Select',
+//            'name' => 'language',
+//            'options' => array(
+//                'label' => 'Which is your mother tongue?',
+//                'empty_option' => 'Please choose your language',
+//                'value_options' => array(
+//                    '0' => 'French',
+//                    '1' => 'English',
+//                    '2' => 'Japanese',
+//                    '3' => 'Chinese',
+//                ),
+//            )
+//        ));
+//
+//        $select = new Element\Select('language');
+//        $select->setLabel('Which is your mother tongue?');
+//        $select->setValueOptions(array(
+//            'european' => array(
+//                'label' => 'European languages',
+//                'options' => array(
+//                    '0' => 'French',
+//                    '1' => 'Italian',
+//                ),
+//            ),
+//            'asian' => array(
+//                'label' => 'Asian languages',
+//                'options' => array(
+//                    '2' => 'Japanese',
+//                    '3' => 'Chinese',
+//                ),
+//            ),
+//        ));
+//
+//        $form = new Form('language');
+//        $form->add($select);
+
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
@@ -77,12 +123,15 @@ class ClientController extends AbstractActionController
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-                $client = new \MyClient\Entity\Client();
+                $firm = $objectManager->getRepository('\MyFirm\Entity\Firm')->findOneBy(array('id' => $form->get("firm_id")->getValue()));
+                $user = $this->zfcUserAuthentication()->getIdentity();
 
+                $client = new \MyClient\Entity\Client();
                 $client->exchangeArray($form->getData());
 
                 $client->setState(1);
-                $client->setUserId(1);
+                $client->setUser($user);
+                $client->setFirm($firm);
 
                 $objectManager->persist($client);
                 $objectManager->flush();
@@ -141,6 +190,7 @@ class ClientController extends AbstractActionController
                 $data = $form->getData();
                 $id = $data['id'];
                 try {
+                    /** @var \MyClient\Entity\Client $clientP */
                     $clientP = $objectManager->find('\MyClient\Entity\Client', $id);
                 }
                 catch (\Exception $ex) {
@@ -150,6 +200,8 @@ class ClientController extends AbstractActionController
                 }
 
                 $clientP->exchangeArray($form->getData());
+
+                $clientP->setBalance(str_replace(",",".",$clientP->getBalance()));
 
                 $objectManager->persist($clientP);
                 $objectManager->flush();

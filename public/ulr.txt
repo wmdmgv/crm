@@ -1,0 +1,6 @@
+http://www.sitepoint.com/kickstart-your-angularjs-development-with-yeoman-grunt-and-bower/
+
+1. npm install -g yo grunt-cli bower
+2. npm install -g generator-angular
+3. yo angular 
+4. bower install angular-bootstrap --save

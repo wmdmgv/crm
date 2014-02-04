@@ -84,6 +84,11 @@ return array(
                     'action' => array('index', 'view', 'add', 'edit', 'delete','restore','page'),
                     'roles' => array('administrator','moderator'),
                 ),
+                array(
+                    'controller' => 'MyApi\Controller\Api',
+                    'action' => array('index', 'ru', 'en', 'orders'),
+                    'roles' => array()
+                ),
             ),
         ),
     ),

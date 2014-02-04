@@ -45,6 +45,7 @@
     <ul class="nav navbar-top-links navbar-right">
     <li>
         <ul><li class="{% if curRoute() =='home' %}active{% endif %}"><a href="{{ url('home') }}">{{ translate('Home') }}</a></li>
+            <li class=""><a href="/app/">{{ translate('App') }}</a></li>
             <li class="{% if curRoute() =='blog' %}active{% endif %}"><a href="{{ url('blog') }}">{{ translate('Blog') }}</a></li>
             <li class="{% if curRoute() =='clients' %}active{% endif %}"><a href="{{ url('clients') }}">{{ translate('Clients') }}</a></li>
             <li class="{% if curRoute() =='firms' %}active{% endif %}"><a href="{{ url('firms') }}">{{ translate('Firms') }}</a></li>

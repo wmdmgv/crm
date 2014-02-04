@@ -32,3 +32,9 @@ for social login add to  composer.json
    http://zf2.com.ua/doc/161
    http://twig.sensiolabs.org/doc/templates.html
    http://paperplane.su/advantages-twig/
+   http://habrahabr.ru/post/146983/  - nodejs application with express fw
+
+
+
+4. ..........
+   

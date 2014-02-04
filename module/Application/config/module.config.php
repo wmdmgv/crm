@@ -74,7 +74,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
-            'Application\Controller\Locale' => 'Application\Controller\LocaleController'
+            'Application\Controller\Locale' => 'Application\Controller\LocaleController',
         ),
     ),
 

@@ -1,18 +1,19 @@
 <?php
+
 return array(
-//    'doctrine' => array(
-//        'driver' => array(
-//            'mydevice_entity' => array(
-//                'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-//                'paths' => array(__DIR__ . '/../src/MyDevice/Entity')
-//            ),
-//            'orm_default' => array(
-//                'drivers' => array(
-//                    'MyDevice\Entity' => 'mydevice_entity',
-//                )
-//            )
-//        )
-//    ),
+    'doctrine' => array(
+        'driver' => array(
+            'myapi_entity' => array(
+                'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'paths' => array(__DIR__ . '/../src/MyApi/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'MyApi\Entity' => 'myapi_entity',
+                )
+            )
+        )
+    ),
 
     'controllers' => array(
         'invokables' => array(
@@ -27,12 +28,16 @@ return array(
 //    ),
 
 
+
+
+
+
     'router' => array(
         'routes' => array(
-            'devices' => array(
+            'api' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/api[/][page/:page][:action][/:id]',
+                    'route'    => '/api[/][:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -40,7 +45,6 @@ return array(
                     'defaults' => array(
                         'controller' => 'MyApi\Controller\Api',
                         'action'     => 'index',
-                        'page' => 1,
                     ),
                 ),
             ),

@@ -1,11 +1,20 @@
+{{checkRole(1)}}
 <button ng-click="tableOrders.reload()" class="btn btn-default">Reload</button>
-<button ng-click="tableOrders.sorting({})" class="btn btn-default">Clear sorting</button>
+
+<button ng-click="tableOrders.sorting({})" class="btn btn-default pull-right">Clear sorting</button>
+<button ng-click="tableOrders.filter({})" class="btn btn-default pull-right">Clear filter</button>
+<p><strong>Sorting:</strong> {{tableOrders.sorting()|json}}
+<p><strong>Filter:</strong> {{tableOrders.filter()|json}}
+
 <div class="clearfix"></div>
 <div loading-container="tableOrders.settings().$loading">
     <table ng-table="tableOrders" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="user in $data">
-            <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="name">
+            <td data-title="'Id'" filter="{ 'id': 'text' }"  sortable="'id'" >
+                {{user.id }}
+            </td>
+            <td data-title="'Name'" filter="{ 'name': 'text' }"  sortable="'name'" >
                 {{user.name}}
                 {{$loading}}
             </td>

@@ -1,7 +1,25 @@
 angular.module('myApp')
   .controller('ListCtrl', function($scope, $resource, $http, $timeout, ngTableParams) {
-    var Api = $resource('/api/orders');
-    console.log("a");
+    var ApiOrders = $resource('/api/orders');
+//    var Api = $resource('/api');
+//    $scope.roleChecked = false;
+//    $scope.checkRole = function (role) {
+//      if (!$scope.roleChecked) {
+//        Api.get({}, function(data) {
+//         console.log(data.role);
+//         console.log(role);
+//          if ((role == data.role) || (role == 1 && data.role != null)) {
+//              // Message thats Ok
+//          } else {
+//            // Goto login
+//            location.href = "/user/login";
+//          }
+//        });
+//        $scope.roleChecked = true;
+//      }
+//
+//    }
+
     $scope.tableOrders = new ngTableParams({
       page: 1,            // show first page
       count: 10,          // count per page
@@ -11,10 +29,12 @@ angular.module('myApp')
     }, {
       total: 0,           // length of data
       getData: function($defer, params) {
+       // $scope.loading = true;
         // ajax request to api
-        Api.get(params.url(), function(data) {
-       // $http.post('/api/orders/table', params.url()).success(function(data) {
+        ApiOrders.get(params.url(), function(data) {
+        //$http.post('/api/orders', params.url()).success(function(data) {
           $timeout(function() {
+           // $scope.loading = false;
             params.total(data.total);
             // set new data
             $defer.resolve(data.result);

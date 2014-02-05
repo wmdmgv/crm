@@ -10,280 +10,142 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 
 use MyDevice\Entity;
+use MyApi\Entity as MyApiEntity;
 
+//use Zend\Mvc\Controller\ActionController;
 
-use Zend\Mvc\Controller\ActionController;
+use Zend\Http\Request;
+use Zend\Uri\UriFactory;
+use Zend\Stdlib;
 
-
+use Zend\Filter;
 
 class ApiController extends AbstractActionController
 {
     private $repository;
+
     public function indexAction()
     {
-
-        $result = new JsonModel(array(
-            array('name' => 'some value', 'age'=>50),
-            array('name' => 'some value', 'age'=>10),
-            array('name' => 'some value', 'age'=>30),
-            array('name' => 'some value', 'age'=>20),
-        ));
-
+        /** @var \MyUser\Entity\User $user */
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        if ($user) {
+            $roleId = $user->getRoles()[0]->getRoleId();
+        } else {
+            $roleId = null;
+        }
+        $result = new JsonModel(array('role' => $roleId ));
         return $result;
+    }
 
+    public function firmsAction()
+    {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $page = $this->params()->fromRoute('page');
-        $max = 15;
 
         //---Paging with query
-        $query = $objectManager->createQuery('SELECT f FROM \MyDevice\Entity\Device f ORDER by f.state DESC, f.id ASC');
+        $sql = 'SELECT f FROM \MyFirm\Entity\Firm f ORDER by f.state DESC, f.id ASC';
+        //print_r($sql);
+        $query = $objectManager->createQuery($sql);
         $adapter = new DoctrinePaginator(new ORMPaginator($query));
+        /** @var Paginator $paginator */
         $paginator = new Paginator($adapter);
-      //  var_dump($page);
+        //  var_dump($page);
         $paginator
-            ->setCurrentPageNumber($page)
-            ->setItemCountPerPage($max);
+            ->setCurrentPageNumber(1)
+            ->setItemCountPerPage(1000);
 
-        $pgCntrl = $this->getServiceLocator()->get('viewhelpermanager')->get('paginationcontrol');
-        $view = new ViewModel(array(
-            'devices' => $paginator,
-            'paginator' => $pgCntrl($paginator, 'sliding', array('partial/paginator.twig', 'Devices'), array('route' => 'devices'))
-        ));
-        return $view;
-    }
+        $data = [];
+        // print_r($paginator->getItemsByPage($page));
+        foreach ($paginator->getItemsByPage(1) as $key => $value) {
+            //var_dump((array)$value);
+            $data[] = array(
+                'id' => $value->getId(),
+                'name' => htmlspecialchars($value->getName())
+            );
+        }
+        // print_r($data);
 
-    public function ordersAction()
-    {
-
-        $result = new JsonModel(array('result' => array(
-            array('name' => 'some value', 'age'=>50),
-            array('name' => 'some value', 'age'=>10),
-            array('name' => 'some value', 'age'=>30),
-            array('name' => 'some value', 'age'=>20),
-        ),
-        'total' => 10));
+        $result = new JsonModel(array(
+                'result' => $data, //(array) $paginator->getItemsByPage($page),
+                'total' => $paginator->getPages()->totalItemCount)
+        );
 
         return $result;
     }
 
-    public function viewAction()
-    {
-        // Check if id and blogpost exists.
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            $this->flashMessenger()->addErrorMessage('Device id doesn\'t set');
-            return $this->redirect()->toRoute('devices');
-        }
-
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-        $post = $objectManager
-            ->getRepository('\MyDevice\Entity\Device')
-            ->findOneBy(array('id' => $id));
-
-        if (!$post) {
-            $this->flashMessenger()->addErrorMessage(sprintf('Device with id %s doesn\'t exists', $id));
-            return $this->redirect()->toRoute('devices');
-        }
-
-        // Render template.
-        $view = new ViewModel(array(
-            'device' => $post->getArrayCopy(),
-        ));
-
-        return $view;
-    }
-
-    public function addAction()
-    {
-        $form = new \MyDevice\Form\DeviceForm();
-        $form->get('submit')->setValue('Add');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $form->setData($request->getPost());
-
-            if ($form->isValid()) {
-                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-                $device = new \MyDevice\Entity\Device();
-
-                $device->exchangeArray($form->getData());
-
-                $device->setState(1);
-
-                $objectManager->persist($device);
-                $objectManager->flush();
-
-                $message = 'Device succesfully saved!';
-                $this->flashMessenger()->addMessage($message);
-
-                // Redirect to list of blogposts
-                return $this->redirect()->toRoute('devices');
-            }
-            else {
-                $message = 'Error while saving device';
-                $this->flashMessenger()->addErrorMessage($message);
-            }
-        }
-        return array('form' => $form);
-    }
-
-    public function editAction()
-    {
-        // Check if id set.
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            $this->flashMessenger()->addErrorMessage('Device id doesn\'t set');
-            return $this->redirect()->toRoute('devices');
-        }
-
-        // Create form.
-        $form = new \MyDevice\Form\DeviceForm();
-        $form->get('submit')->setValue('Save');
-
-        $request = $this->getRequest();
-        if (!$request->isPost()) {
-
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-            $device = $objectManager
-                ->getRepository('\MyDevice\Entity\Device')
-                ->findOneBy(array('id' => $id));
-
-            if (!$device) {
-                $this->flashMessenger()->addErrorMessage(sprintf('Device with id %s doesn\'t exists', $id));
-                return $this->redirect()->toRoute('devices');
-            }
-
-            // Fill form data.
-            $form->bind($device);
-            return array('form' => $form, 'id' => $id, 'device' => $device);
-        }
-        else {
-            $form->setData($request->getPost());
-
-            if ($form->isValid()) {
-                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-                $data = $form->getData();
-                $id = $data['id'];
-                try {
-                    $deviceP = $objectManager->find('\MyDevice\Entity\Device', $id);
-                }
-                catch (\Exception $ex) {
-                    return $this->redirect()->toRoute('devices', array(
-                        'action' => 'index'
-                    ));
-                }
-
-                $deviceP->exchangeArray($form->getData());
-
-                $objectManager->persist($deviceP);
-                $objectManager->flush();
-
-                $message = 'Device succesfully saved!';
-                $this->flashMessenger()->addMessage($message);
-
-                // Redirect to list of blogposts
-                return $this->redirect()->toRoute('devices');
-            }
-            else {
-                $message = 'Error while saving device';
-                $this->flashMessenger()->addErrorMessage($message);
-                return array('form' => $form, 'id' => $id);
-            }
-        }
-    }
-
-    /** Delete user method
-     * @return array|\Zend\Http\Response
+    /** Get List of Orders
+     * @return JsonModel
      */
-    public function deleteAction()
+    public function ordersAction()
     {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            $this->flashMessenger()->addErrorMessage('Device id doesn\'t set');
-            return $this->redirect()->toRoute('devices');
-        }
-
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $del = $request->getPost('del', 'No');
+        //$page = $this->params()->fromQuery('page');
+        //$max = $this->params()->fromQuery('count');
 
-            if ($del == 'Yes') {
-                $id = (int) $request->getPost('id');
-                try {
-                    /** @var \MyDevice\Entity\Device $user */
-                    $user = $objectManager->find('MyDevice\Entity\Device', $id);
-                    $user->setState(0);
-                    $objectManager->persist($user); //remove
-                    $objectManager->flush();
-                }
-                catch (\Exception $ex) {
-                    $this->flashMessenger()->addErrorMessage('Error while deleting data');
-                    return $this->redirect()->toRoute('devices', array(
-                        'action' => 'index'
-                    ));
-                }
+        // Some hack for params , TODO: how can i get params from ?param=value ?
+        $uri = UriFactory::factory($_SERVER['REQUEST_URI'])->getQueryAsArray();
+        $page = $uri['page'];
+        $count = $uri['count'];
 
-                $this->flashMessenger()->addMessage(sprintf('Device %d was succesfully deleted', $id));
+        $sorting = [];
+        if (isset($uri['sorting']) && count($uri['sorting'])) {
+        //print_r($uri);
+            foreach($uri['sorting'] as $key => $value) {
+                $sorting[] = " f.$key $value ";
             }
-
-            return $this->redirect()->toRoute('devices');
+        }
+        $filter = [];
+        if (isset($uri['filter']) && count($uri['filter'])) {
+            //print_r($uri);
+            foreach($uri['filter'] as $key => $value) {
+                $value = urldecode($value);
+                $filter[] = " f.$key LIKE '$value%' ";
+            }
         }
 
-        return array(
-            'id'    => $id,
-            'device' => $objectManager->find('MyDevice\Entity\Device', $id)->getArrayCopy(),
-        );
+        $orderBy = (count($sorting) > 0 ? " ORDER BY " . implode(",", $sorting) : " ");
+        $filterBy = (count($filter) > 0 ? " WHERE " . implode(" AND ", $filter) : " ");
+        //---Paging with query  //ORDER by f.state DESC, f.id ASC
+        $sql = 'SELECT f FROM \MyDevice\Entity\Device f ' .$filterBy. $orderBy;
+        //print_r($sql);
+        $query = $objectManager->createQuery($sql);
+        $adapter = new DoctrinePaginator(new ORMPaginator($query));
+        /** @var Paginator $paginator */
+        $paginator = new Paginator($adapter);
+        //  var_dump($page);
+        $paginator
+            ->setCurrentPageNumber($page)
+            ->setItemCountPerPage($count);
+
+       // $filter = new Filter\Callback(array($this, 'filterCallback'));
+
+       // $paginator->setFilter($filter);
+
+        // WTF ??????
+        // print_r($paginator->toJson());
+        //var_dump($paginator->getItemsByPage($page));
+
+        // Some hack to convert for JSON, because json is = {"0":{},"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{},"8":{},"9":{}}
+        // WTF???
+        $data = [];
+       // print_r($paginator->getItemsByPage($page));
+        foreach ($paginator->getItemsByPage($page) as $key => $value) {
+            //var_dump((array)$value);
+            $data[] = array(
+                'id' => $value->getId(),
+                'name' => htmlspecialchars($value->getName())
+            );
+        }
+       // print_r($data);
+
+        $result = new JsonModel(array(
+                'result' => $data, //(array) $paginator->getItemsByPage($page),
+                'total' => $paginator->getPages()->totalItemCount)
+        );                                                                                      
+
+        return $result;
     }
 
-    /** Restore user method
-     * @return array|\Zend\Http\Response
-     */
-    public function restoreAction()
-    {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            $this->flashMessenger()->addErrorMessage('Device id doesn\'t set');
-            return $this->redirect()->toRoute('devices');
-        }
 
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $res = $request->getPost('res', 'No');
-
-            if ($res == 'Yes') {
-                $id = (int) $request->getPost('id');
-                try {
-                    /** @var \MyDevice\Entity\Device $user */
-                    $user = $objectManager->find('MyDevice\Entity\Device', $id);
-                    $user->setState(1);
-                    $objectManager->persist($user); //remove
-                    $objectManager->flush();
-                }
-                catch (\Exception $ex) {
-                    $this->flashMessenger()->addErrorMessage('Error while restored data');
-                    return $this->redirect()->toRoute('devices', array(
-                        'action' => 'index'
-                    ));
-                }
-
-                $this->flashMessenger()->addMessage(sprintf('Device %d was succesfully restored', $id));
-            }
-
-            return $this->redirect()->toRoute('devices');
-        }
-
-        return array(
-            'id'    => $id,
-            'device' => $objectManager->find('MyUser\Entity\User', $id)->getArrayCopy(),
-        );
-    }
 }

@@ -86,7 +86,12 @@ return array(
                 ),
                 array(
                     'controller' => 'MyApi\Controller\Api',
-                    'action' => array('index', 'ru', 'en', 'orders'),
+                    'action' => array('ru', 'en', 'orders', 'firms'),
+                    'roles' => array('administrator','moderator')
+                ),
+                array(
+                    'controller' => 'MyApi\Controller\Api',
+                    'action' => array('index'),
                     'roles' => array()
                 ),
             ),

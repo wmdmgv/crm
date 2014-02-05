@@ -13,10 +13,14 @@
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/sass-bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/ng-table/ng-table.css" />
+
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+      <link href="/css/sb-admin.css" rel="stylesheet">
+      <link href="/css/style.css" media="screen" rel="stylesheet" type="text/css">
     <!-- endbuild -->
   </head>
   <body ng-app="myApp">
@@ -25,12 +29,12 @@
     <![endif]-->
     <div class="header">
         <ul class="nav nav-pills pull-right">
-            <li class="active"><a ng-href="#">Home</a></li>
-            <li><a ng-href="#/list/">Журнал</a></li>
-            <li><a ng-href="#/new/">Новый</a></li>
+            <li ng-class="{active: activetab=='/'}"><a ng-href="#">Home</a></li>
+            <li ng-class="{active: activetab=='/list'}"><a ng-href="#/list/">Журнал</a></li>
+            <li ng-class="{active: activetab=='/new'}"><a ng-href="#/new/">Новый</a></li>
             <li ><a ng-href="/">Настройки</a></li>
         </ul>
-        <h3 class="text-muted">my</h3>
+        <h3 class="text-muted">Orders & Jobs</h3>
     </div>
     <!-- Add your site or application content here -->
     <div class="container" ng-view=""></div>
@@ -69,6 +73,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/list.js"></script>
+        <script src="scripts/controllers/job.js"></script>
         <!-- endbuild -->
 </body>
 </html>

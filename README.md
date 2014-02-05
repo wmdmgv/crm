@@ -33,7 +33,7 @@ for social login add to  composer.json
    http://twig.sensiolabs.org/doc/templates.html
    http://paperplane.su/advantages-twig/
    http://habrahabr.ru/post/146983/  - nodejs application with express fw
-
+   http://blog.tomaka17.com/2012/12/random-tricks-when-using-angularjs/  - angular tricks
 
 
 4. ..........

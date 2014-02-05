@@ -1,1 +1,107 @@
-new
+{{checkRole(1)}}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>Order</h4>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>Gleb Metlov</b>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form id="client" name="client" action="/clients/edit/1" method="post">
+                                <input type="hidden" class="form-control" size="20" value="63d9e95368e49d8e4e69d2ea7b1e24e2" name="security">
+                                <input type="hidden" class="form-control" size="20" value="1" name="id">
+                                <div class="form-group  form-element-firm_id">
+                                    <label>Firm:</label>
+                                    <select class="form-control" name="firm_id">
+                                        <option>--- Select Firm ---</option>
+                                        <option ng-repeat="firm in firms"  selected=""  value="{{firm.id}}">{{firm.name}}</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group  form-element-name">
+                                    <label>Name:</label>
+                                    <input type="text" required="" class="form-control" size="20" value="Gleb Metlov" name="name">
+                                </div>
+                                <div class="form-group  form-element-phone">
+                                    <label>Phone:</label>
+                                    <input type="tel" pattern="^\+[0-9]{3}-[0-9]{2}-[0-9]{7}$" required="" placeholder="+XXX-XX-XXXXXXX" class="form-control" size="20" value="+380505632365" name="phone">
+                                </div>
+                                <div class="form-group  form-element-email">
+                                    <label>E-mail:</label>
+                                    <input type="email" required="" class="form-control" size="20" value="glebm@mail.ru" name="email">
+                                </div>
+                                <div class="form-group  form-element-address">
+                                    <label>Address:</label>
+                                    <input type="text" class="form-control" size="20" value="Ulyanova" name="address">
+                                </div>
+                                <div class="form-group  form-element-comment">
+                                    <label>Comment:</label>
+                                    <textarea class="form-control" size="20" rows="3" name="comment">skidka 100%</textarea>
+                                </div>
+                                <div class="form-group  form-element-state">
+                                    <label>Active:</label>
+                                    <input type="checkbox" checked="checked" value="1" name="state">
+                                </div>
+                                <div class="form-group  form-element-balance">
+                                    <label>Balance:</label>
+                                    <input type="text" placeholder="0.00" class="form-control" size="20" value="99999999.99" name="balance">
+                                </div>
+                                <div class="form-group  form-element-use_balance">
+                                    <label>Use Balance:</label>
+                                    <input type="checkbox" checked="checked" value="1" name="use_balance">
+                                </div>
+                                <input type="submit" value="Save" name="submit" class="btn btn-default">
+                                <input type="reset" value="Reset" name="reset" class="btn btn-default">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <p>&copy; 2014 by <a title="clients" href="mailto:glebm@mail.ru">WMD</a>. Все права защищены. [<a href="/application/locale/ru">ru</a> | <a href="/application/locale/en">en</a>]</p>
+    </footer>
+</div>
+
+
+
+
+<div class="clearfix"></div>
+
+
+<form novalidate class="simple-form">
+    Name: <input type="text" ng-model="user.name" /><br />
+    E-mail: <input type="email" ng-model="user.email" /><br />
+    Gender: <input type="radio" ng-model="user.gender" value="male" />male
+    <input type="radio" ng-model="user.gender" value="female" />female<br />
+    <button ng-click="reset()">RESET</button>
+    <button ng-click="update(user)">SAVE</button>
+</form>
+<pre>form = {{user | json}}</pre>
+<pre>master = {{master | json}}</pre>
+
+
+
+<div loading-container="tableOrders.settings().$loading">
+    <table ng-table="tableOrders" show-filter="true" class="table">
+        <tbody>
+        <tr ng-repeat="user in $data">
+            <td data-title="'Id'" filter="{ 'id': 'text' }"  sortable="'id'" >
+                {{user.id }}
+            </td>
+            <td data-title="'Name'" filter="{ 'name': 'text' }"  sortable="'name'" >
+                {{user.name}}
+                {{$loading}}
+            </td>
+            <td data-title="'Age'" sortable="age">
+                {{user.age}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -68,6 +68,7 @@ class ClientController extends AbstractActionController
         $view = new ViewModel(array(
             'client' => $client->getArrayCopy(),
         ));
+        // WMD if can use diferent tamplate   $view->setTemplate('school/school/details.phtml');
 
         return $view;
     }

@@ -1,5 +1,6 @@
 angular.module('myApp')
-  .controller('ListCtrl', function($scope, $resource, $http, $timeout, ngTableParams) {
+  .controller('ListCtrl', function($scope, $resource, $http, $timeout, ngTableParams, Initial) {
+    Initial();
     var ApiOrders = $resource('/api/orders');
 //    var Api = $resource('/api');
 //    $scope.roleChecked = false;

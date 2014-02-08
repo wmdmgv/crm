@@ -34,7 +34,7 @@ class Job
     protected $order_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\MyApi\Entity\Order", cascade={"all"}, fetch="EAGER", inversedBy="jobs")
+     * @ORM\ManyToOne(targetEntity="\MyApi\Entity\Order", cascade={"persist"}, fetch="EAGER", inversedBy="jobs")
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
@@ -46,14 +46,14 @@ class Job
     protected $device_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\MyDevice\Entity\Device", cascade={"all"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="\MyDevice\Entity\Device", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="device_id", referencedColumnName="id")
      */
     private $device;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=64, unique=true)
+     * @ORM\Column(type="string", length=64)
      */
     protected $name;
 
@@ -164,69 +164,48 @@ class Job
 
 
     /**
-     * Get firm.
+     * Get order.
      *
      * @return int
      */
-    public function getFirm()
+    public function getOrder()
     {
-        return $this->firm;
+        return $this->order;
     }
 
     /**
-     * Get firm.
+     * Get device.
      *
      * @return int
      */
-    public function getUser()
+    public function getDevice()
     {
-        return $this->user;
+        return $this->device;
     }
 
-    /**
-     * Get client.
-     *
-     * @return int
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
 
     /**
-     * Set user.
+     * Set order.
      *
-     * @param object $user
+     * @param object $order
      *
      * @return void
      */
-    public function setUser($user)
+    public function setOrder($order)
     {
-        $this->user = $user;
+        $this->order = $order;
     }
 
     /**
-     * Set firm.
+     * Set device.
      *
-     * @param object $firm
-     *
-     * @return void
-     */
-    public function setFirm($firm)
-    {
-        $this->firm = $firm;
-    }
-
-    /**
-     * Set client.
-     *
-     * @param object $client
+     * @param object $device
      *
      * @return void
      */
-    public function setClient($client)
+    public function setDevice($device)
     {
-        $this->client = $client;
+        $this->device = $device;
     }
 
     /**
@@ -314,6 +293,38 @@ class Job
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return datetime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Get updated.
+     *
+     * @return string
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set updated.
+     *
+     * @param string $updated
+     *
+     * @return void
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 
 

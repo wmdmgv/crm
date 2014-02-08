@@ -10,16 +10,15 @@
 <div loading-container="tableOrders.settings().$loading">
     <table ng-table="tableOrders" show-filter="true" class="table">
         <tbody>
-        <tr ng-repeat="user in $data">
+        <tr ng-repeat="order in $data">
             <td data-title="'Id'" filter="{ 'id': 'text' }"  sortable="'id'" >
-                {{user.id }}
+                {{order.id }}
             </td>
             <td data-title="'Name'" filter="{ 'name': 'text' }"  sortable="'name'" >
-                {{user.name}}
+                {{order.name}}
                 {{$loading}}
             </td>
-            <td data-title="'Age'" sortable="age">
-                {{user.age}}
+            <td data-title="'Action'"> <a href="#/edit/{{ order.id  }}"><button class="btn btn-success btn-xs" type="button">{{ translate('ru','view') }}</button></a>
             </td>
         </tr>
         </tbody>

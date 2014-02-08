@@ -68,9 +68,9 @@ class Order
      */
     private $jobs;
 
-    /**
+    /** //  unique=true
      * @var string
-     * @ORM\Column(type="string", length=64, unique=true)
+     * @ORM\Column(type="string", length=64)
      */
     protected $name;
 
@@ -104,7 +104,7 @@ class Order
      */
     public function __construct()
     {
-
+        $this->jobs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -162,6 +162,16 @@ class Order
     }
 
     /**
+     * Get client_id.
+     *
+     * @return int
+     */
+    public function getClient_Id()
+    {
+        return $this->client_id;
+    }
+
+    /**
      * Set firm_id.
      *
      * @param int $id
@@ -198,7 +208,7 @@ class Order
     /**
      * Get client.
      *
-     * @return int
+     * @return object
      */
     public function getClient()
     {
@@ -326,6 +336,16 @@ class Order
     public function setAmount($amount)
     {
         $this->amount = $amount;
+    }
+
+    /**
+     * Get jobs.
+     *
+     * @return float
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
     }
 
 

@@ -11,8 +11,8 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 /* Space out content a bit */
 body {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -32,7 +32,7 @@ body {
 .header h3 {
     margin-top: 0;
     margin-bottom: 0;
-    line-height: 40px;
+    /*line-height: 30px;*/
     padding-bottom: 19px;
 }
 
@@ -82,7 +82,7 @@ body {
     }
     /* Space out the masthead */
     .header {
-        margin-bottom: 30px;
+        margin-bottom: 0px;
     }
     /* Remove the bottom border on the jumbotron for visual effect */
     .jumbotron {
@@ -112,4 +112,24 @@ body {
 
 .container {
     max-width: 100% !important;
+}
+
+.w250 {
+    width: 250px !important;
+    float: left !important;
+}
+.w30 {
+    width: 30px !important;
+}
+
+.fl {
+    float:left !important;
+}
+
+.progress {
+    margin-bottom: 0px !important;
+}
+
+.input-group-addon {
+    padding: 2px 9px !important;
 }

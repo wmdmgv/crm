@@ -257,10 +257,10 @@ class ApiController extends AbstractActionController
                 $order = new \MyApi\Entity\Order();
                // $order->exchangeArray($form->getData());
 
-                $order->setState($orderForm['state']);
-                $order->setName($orderForm['name']);
-                $order->setComment($orderForm['comment']);
-                $order->setAmount(($orderForm['amount'] ? $orderForm['amount'] : 0));
+                $order->setState((isset($orderForm['state']) ? $orderForm['state'] : 1));
+                $order->setName((isset($orderForm['name']) ? $orderForm['name'] : ""));
+                $order->setComment((isset($orderForm['comment']) ? $orderForm['comment'] : ""));
+                $order->setAmount((isset($orderForm['amount']) ? $orderForm['amount'] : 0));
 
                 $client = $objectManager->getRepository('MyClient\Entity\Client')->find((int)$orderForm['client']['id']);
                 $order->setClient($client);

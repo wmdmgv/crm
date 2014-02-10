@@ -35,7 +35,7 @@ angular.module('myApp')
         $scope.order.firm.id = $rootScope.firmUser;
       }
       $timeout(updateUserId, 100);
-      $scope.progressbar += 10;
+      $scope.progressbar += 20;
     }
 
     $scope.form = {};
@@ -78,11 +78,11 @@ angular.module('myApp')
   //  $scope.status = 2;
 
     $scope.update = function () {
-      console.log($scope.order);
+      //console.log($scope.order);
       $scope.progressbar = 10;
       ApiOrder.save({'orderId': $scope.orderId, order: $scope.order}, function(data) {
         $scope.progressbar = 50;
-        console.log(data);
+        //console.log(data);
         $scope.order = data.result;
         $scope.orderId = $scope.order.id;
         $timeout(function() {
@@ -99,9 +99,13 @@ angular.module('myApp')
 
     $scope.loadJobs = function() {
       ApiJobs.get({'orderId': $scope.orderId}, function(data) {
-        console.log(data.result);
+        //console.log(data.result);
         $scope.jobs = data.result;
         $scope.progressbar += 10;
+        $timeout(function() {
+          $scope.recalculateSumm();
+        }, 2000);
+
       });
     }
 
@@ -148,6 +152,7 @@ angular.module('myApp')
       $scope.progressbar = 50;
       ApiJob.save({ jobId: id, job: $scope.jobsArr[id]}, function(data) {
        // $scope.loadJobs();
+        $scope.recalculateSumm();
         $timeout(function() {
           $scope.progressbar = 90;
         }, 300);
@@ -157,12 +162,27 @@ angular.module('myApp')
       });
 
     };
+
+    $scope.recalculateSumm = function() {
+      var sum = 0.0;
+      for(var i in $scope.jobsArr){
+        var el = $scope.jobsArr[i];
+        sum = sum + parseFloat(el.price);
+      }
+      $scope.summa = sum;
+    }
+
+    $scope.saveSumma = function(summa) {
+      $scope.order.amount = summa;
+
+    }
     $scope.checkJob = function() {
       console.log($scope.jobsArray);
       console.log($scope.jobsArr);
       $scope.loadJobs();
 
     }
+
 
     $scope.delJob = function(id) {
       if (confirm("Are you want to delete?")) {

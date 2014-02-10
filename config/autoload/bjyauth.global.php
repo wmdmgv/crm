@@ -86,7 +86,7 @@ return array(
                 ),
                 array(
                     'controller' => 'MyApi\Controller\Api',
-                    'action' => array('orders', 'firms', 'users', 'statuses','clients'),
+                    'action' => array('orders', 'firms', 'users', 'statuses','clients', 'devices'),
                     'roles' => array('administrator','moderator')
                 ),
                 array(

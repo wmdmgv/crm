@@ -39,7 +39,7 @@
                                     <!--<option ng-repeat="client in clients | filter: searchparam" ng-selected="client.id==order.client.id"  value="{{client.id}}">{{client.name}}</option>-->
                                 <!--</datalist>-->
                                 <input type="text" AUTOCOMPLETE="off" list="listCities" placeholder="Search..." class="form-control w250" size="20" ng-model="searchparam" value="" name="name">
-                                <button class="w30">+</button>
+                                <button class="w30" disabled>+</button>
                                 <select class="form-control" required="" ng-model="order.client.id">
                                     <option ng-repeat="client in clients | filter: searchparam" ng-selected="client.id==order.client.id"  value="{{client.id}}">{{client.name}}</option>
                                 </select>
@@ -89,18 +89,46 @@
                     <div class="panel panel-default" ng-show="orderId">
                         <div class="panel-heading">
 
-                                <label>Jobs:</label> <button ng-click="addJob()">+</button>
+                                <label>Jobs:</label> <button ng-click="addJob()">+</button> <button ng-click="checkJob()">Reload</button>
 
                         </div>
                         <div class="panel-collapse in" id="collapseOne" style="height: auto;">
-                            <div class="panel-body">
-                                You may add and edit some jobs.
-                                <div class="row show-grid" ng-repeat="job in jobs">
+                            <div class="panel-body" ng-init="key=0">
+                                <div class="row show-grid" >
+                                    <div class="col-md-4 mrnlr3" >Device</div>
+                                    <div class="col-md-3 mrnlr3" >Name</div>
+                                    <div class="col-md-2 mrnlr3" >Comment</div>
+                                    <div class="col-md-1 mrnlr3" >Price</div>
+                                    <div class="col-md-1 mrnlr3" >Status</div>
+                                    <div class="col-md-1 mrnlr3" >Action</div>
+                                </div>
+                                <div class="row show-grid" ng-repeat="job in jobs" ng-init="jobsArr[job.id]={}" >
 
-                                    <div class="col-md-3">{{job.id}} <input type="text" ng-model="jobsArray[job.id]"></div>
-                                    <div class="col-md-3"><input type="text"></div>
-                                    <div class="col-md-3"><input type="text"></div>
-                                    <div class="col-md-3">{{job.name}} <button ng-click="saveJob(job.id)">S</button><button ng-click="delJob(job.id)">-</button></div>
+                                    <div class="col-md-4 mrnlr3" title="{{job.id}}"><div style="width:20px;float:left;">{{key}}</div>
+
+                                        <input type="hidden" ng-model="jobsArr[job.id].id"  ng-init="jobsArr[job.id].id=job.id">
+                                        <input type="text" AUTOCOMPLETE="off" placeholder="Search..." class="form-control w75" size="20" ng-model="searchp" value="" name="name">
+                                        <button class="w15" disabled>+</button>
+                                        <select class="form-control w200" required="" ng-model="jobsArr[job.id].device_id" ng-init="jobsArr[job.id].device_id=job.device_id">
+                                            <option ng-repeat="device in devices | filter: searchp" ng-selected="device.id==jobsArr[job.id].device_id"  value="{{device.id}}">{{device.name}}</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-3 mrnlr3" ><input type="text" class="w200" ng-model="jobsArr[job.id].name"  ng-init="jobsArr[job.id].name=job.name"></div>
+                                    <div class="col-md-2 mrnlr3"><textarea ng-model="jobsArr[job.id].comment"  ng-init="jobsArr[job.id].comment=job.comment" style='height:23px'></textarea></div>
+                                    <div class="col-md-1 mrnlr3" ><input type="text" class="clprice" ng-model="jobsArr[job.id].price"  ng-init="jobsArr[job.id].price=job.price"></div>
+                                    <div class="col-md-1 mrnlr3" title="{{job.state}}">
+                                        <select class="form-control btn
+                                    {{(jobsArr[job.id].state == 1) && 'btn-primary' || ''}}
+                                    {{(jobsArr[job.id].state == 2) && 'btn-warning' || ''}}
+                                    {{(jobsArr[job.id].state == 3) && 'btn-success' || ''}}
+                                    {{(jobsArr[job.id].state == 4) && 'btn-info' || ''}}
+                                    {{(jobsArr[job.id].state == 5) && 'btn-danger' || ''}}
+                                btn-xs nobutton" ng-model="jobsArr[job.id].state" ng-init="jobsArr[job.id].state=job.state" >
+                                            <option ng-repeat="stat in statuses" ng-selected="stat.id==jobsArr[job.id].state"  value="{{stat.id}}">{{stat.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mrnlr3"><button class="btn btn-success btn-xs" ng-click="saveJob(job.id)">Save</button><button class="btn btn-outline btn-danger btn-xs" ng-click="delJob(job.id)">Del</button></div>
                                 </div>
                             </div>
 

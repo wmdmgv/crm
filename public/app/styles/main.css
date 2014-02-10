@@ -118,10 +118,24 @@ body {
     width: 250px !important;
     float: left !important;
 }
+.w200 {
+    width: 200px !important;
+    float: left !important;
+}
+.w150 {
+    width: 150px !important;
+    float: left !important;
+}
+.w75 {
+    width: 75px !important;
+    float: left !important;
+}
 .w30 {
     width: 30px !important;
 }
-
+.w15 {
+    width: 15px !important;
+}
 .fl {
     float:left !important;
 }
@@ -132,4 +146,23 @@ body {
 
 .input-group-addon {
     padding: 2px 9px !important;
+}
+
+.show-grid {
+    margin: 2px !important;
+}
+
+.show-grid [class^="col-"] {
+    padding-bottom: 2px !important;
+    padding-top: 2px !important;
+}
+
+.clprice {
+    width:50px;
+    text-align: right;
+}
+
+.mrnlr3 {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
 }

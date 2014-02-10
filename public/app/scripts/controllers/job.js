@@ -2,7 +2,8 @@ angular.module('myApp')
   .controller('JobCtrl', function($rootScope, $scope, $q, $resource, $http, $timeout, ngTableParams, $routeParams, Initial) {
     Initial();
     $scope.order = {firm:{},state:0};
-    $scope.jobsArray = [];
+    $scope.jobsArr = {};
+
     $scope.orderId = $routeParams.orderId;
     $scope.progressbar = 0;
    // var ApiOrders = $resource('/api/orders');
@@ -20,6 +21,7 @@ angular.module('myApp')
         $scope.order = data.result;
         $scope.progressbar += 10;
         console.log(data);
+        $scope.loadJobs();
       });
     } else {
       //Wait for data
@@ -52,11 +54,13 @@ angular.module('myApp')
     });
     ApiClient.get({}, function(data) {
       $scope.clients = data.result;
-      $scope.progressbar += 60;
+      $scope.progressbar += 40;
     });
 
-
-
+    ApiDevice.get({}, function(data) {
+      $scope.devices = data.result;
+      $scope.progressbar += 10;
+    });
 
 //    $scope.master = {};
 //
@@ -96,24 +100,25 @@ angular.module('myApp')
     $scope.loadJobs = function() {
       ApiJobs.get({'orderId': $scope.orderId}, function(data) {
         console.log(data.result);
-
+        $scope.jobs = data.result;
+        $scope.progressbar += 10;
       });
     }
 
     $scope.addJob = function() {
-      var number = $scope.jobs.length + 1;
+      //var number = $scope.jobs.length + 1;
      // console.log($scope.jobs);
       var newJob = {
         id : 0,
         order_id : $scope.orderId ,
-        device_id : null,
-        name: 'Test Message',
-        comment: 'Comment',
+        device_id : 0,
+        name: '',
+        comment: '',
         state : 1,
         price : 0,
         created : null,
-        updated: null,
-        number: number
+        updated: null
+
       };
 
       ApiJob.save({ job: newJob}, function(data) {
@@ -139,30 +144,10 @@ angular.module('myApp')
 
     $scope.saveJob = function(id) {
       console.log(id);
-      console.log($scope.jobsArray[id]);
-
-//      ApiJob.save({ jobId: id, job: }, function(data) {
-//
-//        //TODO: refresh list of job
-//
-//        //$scope.jobs.push(newJob);
-//        $timeout(function() {
-//          $scope.progressbar = 90;
-//        }, 300);
-//        $timeout(function() {
-//          $scope.progressbar = 100;
-//        }, 800);
-//      });
-
-    };
-
-    $scope.delJob = function(id) {
-
-      ApiJob.save({ jobId: id, 'jobdelete': 1}, function(data) {
-
-        //TODO: refresh list of job
-
-        //$scope.jobs.push(newJob);
+      console.log($scope.jobsArr[id]);
+      $scope.progressbar = 50;
+      ApiJob.save({ jobId: id, job: $scope.jobsArr[id]}, function(data) {
+       // $scope.loadJobs();
         $timeout(function() {
           $scope.progressbar = 90;
         }, 300);
@@ -171,6 +156,30 @@ angular.module('myApp')
         }, 800);
       });
 
+    };
+    $scope.checkJob = function() {
+      console.log($scope.jobsArray);
+      console.log($scope.jobsArr);
+      $scope.loadJobs();
+
+    }
+
+    $scope.delJob = function(id) {
+      if (confirm("Are you want to delete?")) {
+        $scope.progressbar = 50;
+        ApiJob.save({ jobId: id, 'jobdelete': 1}, function(data) {
+
+          //TODO: refresh list of job
+          $scope.loadJobs();
+          //$scope.jobs.push(newJob);
+          $timeout(function() {
+            $scope.progressbar = 90;
+          }, 300);
+          $timeout(function() {
+            $scope.progressbar = 100;
+          }, 800);
+        });
+      }
 //      for(var i in $scope.jobs){
 //        var el = $scope.jobs[i];
 //        if (el.number == number) {

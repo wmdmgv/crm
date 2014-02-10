@@ -85,24 +85,27 @@ class ApiController extends AbstractActionController
                     //var_dump($params);
                     // Edit
                     $jobId = $params['jobId'];
-
-                    /** @var \MyApi\Entity\Order $job */
-                    $job = $objectManager->getRepository('MyApi\Entity\Order')->find($jobId);
-                    $job->setState($orderForm['state']);
+//var_dump($orderForm);
+//
+//                    array (size=6)
+//  'id' => int 18
+//  'device_id' => string '12' (length=2)
+//  'name' => string 'Test Message' (length=12)
+//  'comment' => string 'Comment' (length=7)
+//  'price' => string '0.00' (length=4)
+//  'state' => int 1
+                    /** @var \MyApi\Entity\Job $job */
+                    $job = $objectManager->getRepository('MyApi\Entity\Job')->find($jobId);
+                    $job->setState((int)$orderForm['state']);
                     $job->setName($orderForm['name']);
                     $job->setComment($orderForm['comment']);
-                    $job->setAmount($orderForm['amount']);
+                    $job->setPrice($orderForm['price']);
+                    $job->setDevice_Id((int)$orderForm['device_id']);
                     // If change Firm
-                    if ($job->getFirm_Id() != $orderForm['firm']['id']) {
-                        $firm = $objectManager->getRepository('MyFirm\Entity\Firm')->find((int)$orderForm['firm']['id']);
-                        $job->setFirm($firm);
+                    if ($job->getDevice_Id() != $orderForm['device_id']) {
+                        $device = $objectManager->getRepository('MyDevice\Entity\Device')->find((int)$orderForm['device_id']);
+                        $job->setDevice($device);
                     }
-                    // If change Client
-                    if ($job->getClient_Id()!= $orderForm['client']['id']) {
-                        $client = $objectManager->getRepository('MyClient\Entity\Client')->find((int)$orderForm['client']['id']);
-                        $job->setClient($client);
-                    }
-
                     //............//
                     $objectManager->persist($job);
                     $objectManager->flush();
@@ -131,14 +134,16 @@ class ApiController extends AbstractActionController
             }
 
         }
+        if (isset($params['jobdelete'])) {
+            $job = null;
+        } else {
+            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $job = $objectManager->getRepository('MyApi\Entity\Job')->find($jobId);
 
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $job = $objectManager->getRepository('MyApi\Entity\Job')->find($jobId);
-
-        $job->order = $job->order->getArrayCopy();
-        $job->device = $job->device->getArrayCopy();
-        $job = $job->getArrayCopy();
-
+            $job->order = $job->order->getArrayCopy();
+            $job->device = $job->device->getArrayCopy();
+            $job = $job->getArrayCopy();
+        }
         $result = new JsonModel(array(
                 'result' => $job,
                 'total' => count($job))
@@ -146,75 +151,55 @@ class ApiController extends AbstractActionController
         return $result;
     }
 
+//    protected function object_to_array($obj)
+//    {
+//        $arrObj = is_object($obj) ? get_object_vars($obj) : $obj;
+//        foreach ($arrObj as $key => $val) {
+//            $val = (is_array($val) || is_object($val)) ? $this->object_to_array($val) : $val;
+//            $arr[$key] = $val;
+//        }
+//        return $arr;
+//    }
+//
+//    public static function object_to_array($d) {
+//        if (is_object($d))
+//            $d = get_object_vars($d);
+//
+//        return is_array($d) ? array_map(__METHOD__, $d) : $d;
+//    }
+//
+//    public static function array_to_object($d) {
+//        return is_array($d) ? (object) array_map(__METHOD__, $d) : $d;
+//    }
+
     /** Get List of Jobs
      * @return JsonModel
      */
     public function jobsAction()
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
         $orderId = $this->params()->fromRoute('id');
-        print_r($orderId);
+        $data = array();
         $jobs = $objectManager->getRepository('MyApi\Entity\Job')->findBy(array('order_id' => $orderId));
-        var_dump($jobs);
-        die;
-
-        $sorting = [];
-        if (isset($uri['sorting']) && count($uri['sorting'])) {
-            //print_r($uri);
-            foreach($uri['sorting'] as $key => $value) {
-                $sorting[] = " f.$key $value ";
-            }
-        }
-        $filter = [];
-        if (isset($uri['filter']) && count($uri['filter'])) {
-            //print_r($uri);
-            foreach($uri['filter'] as $key => $value) {
-                $value = urldecode($value);
-                $filter[] = " LOWER(f.$key) LIKE '$value%' ";
-            }
-        }
-
-        $orderBy = (count($sorting) > 0 ? " ORDER BY " . implode(",", $sorting) : " ");
-        $filterBy = (count($filter) > 0 ? " WHERE " . implode(" AND ", $filter) : " ");
-        //---Paging with query  //ORDER by f.state DESC, f.id ASC
-        $sql = 'SELECT f FROM \MyApi\Entity\Order f ' .$filterBy. $orderBy;
-        //print_r($sql);
-        $query = $objectManager->createQuery($sql);
-        $adapter = new DoctrinePaginator(new ORMPaginator($query));
-        /** @var Paginator $paginator */
-        $paginator = new Paginator($adapter);
-        //  var_dump($page);
-        $paginator
-            ->setCurrentPageNumber($page)
-            ->setItemCountPerPage($count);
-
-        // $filter = new Filter\Callback(array($this, 'filterCallback'));
-
-        // $paginator->setFilter($filter);
-
-        // WTF ??????
-        // print_r($paginator->toJson());
-        //var_dump($paginator->getItemsByPage($page));
-
-        // Some hack to convert for JSON, because json is = {"0":{},"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{},"8":{},"9":{}}
-        // WTF???
-        $data = [];
-        // print_r($paginator->getItemsByPage($page));
-        foreach ($paginator->getItemsByPage($page) as $key => $value) {
-            //var_dump((array)$value);
-            $data[] = array(
+        foreach ($jobs as $key => $value) {
+            /** @var \MyApi\Entity\Job $value */
+            $data[$key] = array(
                 'id' => $value->getId(),
-                'name' => htmlspecialchars($value->getName())
+                'order_id' => $value->getOrder_Id(),
+                'device_id' => $value->getDevice_Id(),
+                'name' => $value->getName(),
+                'comment' => $value->getComment(),
+                'price' => $value->getPrice(),
+                'state' => $value->getState(),
+                'created' => $value->getCreated(),
+                'updated' => $value->getUpdated()
             );
         }
-        // print_r($data);
 
         $result = new JsonModel(array(
-                'result' => $data, //(array) $paginator->getItemsByPage($page),
-                'total' => $paginator->getPages()->totalItemCount)
+                'result' => $data,
+                'total' => count($data))
         );
-
         return $result;
     }
 
@@ -381,6 +366,28 @@ class ApiController extends AbstractActionController
             $data[] = array(
                 'id' => $user->getId(),
                 'name' => htmlspecialchars($user->getName()) . ', ' . htmlspecialchars($user->getAddress()). ', ' . htmlspecialchars($user->getComment())
+            );
+        }
+        $result = new JsonModel(array(
+                'result' => $data,
+                'total' => count($data))
+        );
+        return $result;
+    }
+
+    /** Get devices list
+     * @return JsonModel
+     */
+    public function devicesAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $list = $objectManager->getRepository('MyDevice\Entity\Device')->findAll();;
+        $data = array();
+        /** @var \MyClient\Entity\Client $device */
+        foreach ($list as $key => $device) {
+            $data[] = array(
+                'id' => $device->getId(),
+                'name' => htmlspecialchars($device->getName())
             );
         }
         $result = new JsonModel(array(

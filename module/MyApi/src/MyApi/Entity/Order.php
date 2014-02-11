@@ -339,6 +339,28 @@ class Order
     }
 
     /**
+     * Get created.
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set created.
+     *
+     * @param string $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
      * Get jobs.
      *
      * @return float

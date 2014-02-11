@@ -44,7 +44,7 @@
                                                 <button class="btn  btn-primary btn-xs nobutton" type="button">{{ translate('actived') }}</button>
                                             {% endif %}</td>
                                         <td>
-                                            <a href="{{ url('clients', {'action': 'edit', 'id': client.id}) }}"><button class="btn btn-success btn-xs" type="button">{{ translate('edit') }}</button></a>
+                                            <a href="{{ url('clients', {'action': 'edit', 'id': client.id}) }}"><button class="btn btn-success btn-outline btn-xs" type="button">{{ translate('edit') }}</button></a>
                                             {% if client.state == 1 %}
                                                 <a href="{{ url('clients', {'action': 'delete', 'id': client.id}) }}">
                                                     <button class="btn btn-outline btn-danger btn-xs" type="button">{{ translate('delete') }}</button>

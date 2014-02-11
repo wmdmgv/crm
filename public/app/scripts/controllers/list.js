@@ -1,7 +1,66 @@
 angular.module('myApp')
-  .controller('ListCtrl', function($scope, $resource, $http, $timeout, ngTableParams, Initial) {
+  .controller('ListCtrl', function($scope, $resource, $q, $http, $timeout, ngTableParams, Initial) {
     Initial();
     var ApiOrders = $resource('/api/orders');
+    var ApiStatus = $resource('/api/statuses');
+    var ApiFirm = $resource('/api/firms');
+    var ApiUser = $resource('/api/users');
+    var ApiClient = $resource('/api/clients');
+
+
+    ApiStatus.get({}, function(data) {
+      $scope.statuses = data.result;
+    });
+    ApiFirm.get({}, function(data) {
+      $scope.firms = data.result;
+    });
+    ApiUser.get({}, function(data) {
+      $scope.users = data.result;
+    });
+    ApiClient.get({}, function(data) {
+      $scope.clients = data.result;
+    });
+
+    $scope.getWidth = function (jobs_cnt) {
+      //console.log(Math.round(70/jobs_cnt));
+      return Math.round(70/jobs_cnt);
+
+    }
+
+//    var inArray = Array.prototype.indexOf ?
+//      function (val, arr) {
+//        return arr.indexOf(val)
+//      } :
+//      function (val, arr) {
+//        var i = arr.length;
+//        while (i--) {
+//          if (arr[i] === val) return i;
+//        }
+//        return -1;
+//      }
+//    var data = $scope.statuses;
+//
+//    $scope.names = function(column) {
+//      var def = $q.defer(),
+//        arr = [],
+//        names = [];
+//      console.log(data);
+//      angular.forEach(data, function(item){
+//        console.log(item);
+//        if (inArray(item.name, arr) === -1) {
+//          arr.push(item.name);
+//          names.push({
+//            'id': item.id,
+//            'title': item.name
+//          });
+//        }
+//      });
+//      def.resolve(names);
+//      return def;
+//    };
+
+
+
 //    var Api = $resource('/api');
 //    $scope.roleChecked = false;
 //    $scope.checkRole = function (role) {
@@ -23,7 +82,7 @@ angular.module('myApp')
 
     $scope.tableOrders = new ngTableParams({
       page: 1,            // show first page
-      count: 10,          // count per page
+      count: 25,          // count per page
       sorting: {
         name: 'asc'     // initial sorting
       }

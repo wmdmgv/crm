@@ -10,8 +10,8 @@ angular.module('myApp', [
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/list.html',
+        controller: 'ListCtrl'
       })
       .when('/list', {
         templateUrl: 'views/list.html',

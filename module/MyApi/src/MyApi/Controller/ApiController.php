@@ -490,11 +490,34 @@ class ApiController extends AbstractActionController
         // WTF???
         $data = [];
        // print_r($paginator->getItemsByPage($page));
+
+
+        /** @var \MyApi\Entity\Order $value */
         foreach ($paginator->getItemsByPage($page) as $key => $value) {
             //var_dump((array)$value);
+            /** @var \DateTime $date */
+            $date = $value->getCreated();
+            $jobs = $value->getJobs();
+            $jbs = array();
+            /** @var \MyApi\Entity\Job $v */
+            foreach ($jobs as $k => $v) {
+                $jbs[] = array('id' => $v->getId(), 'name' => $v->getName(), 'state' => $v->getState());
+            }
             $data[] = array(
                 'id' => $value->getId(),
-                'name' => htmlspecialchars($value->getName())
+                'name' => htmlspecialchars($value->getName()),
+                'created' => $date->format("Y-m-d H:i:s"),
+                'client' => $value->getClient()->getName(),
+                'state' => $value->getState(),
+                'firm' => $value->getFirm()->getName(),
+                'firm_id' => $value->getFirm_Id(),
+                'user' => $value->getUser()->getUsername(),
+                'user_id' => $value->getUser_Id(),
+                'amount' => $value->getAmount(),
+                'jobs' => $jbs,
+                'jobs_cnt' => count($jbs)
+
+
             );
         }
        // print_r($data);

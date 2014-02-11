@@ -32,7 +32,7 @@
                         <button class="btn  btn-primary btn-xs nobutton" type="button">{{ translate('actived') }}</button>
                     {% endif %}</td>
                 <td>
-                    <a href="{{ url('firms', {'action': 'edit', 'id': firm.id}) }}"><button class="btn btn-success btn-xs" type="button">{{ translate('edit') }}</button></a>
+                    <a href="{{ url('firms', {'action': 'edit', 'id': firm.id}) }}"><button class="btn btn-success btn-outline btn-xs" type="button">{{ translate('edit') }}</button></a>
                     {% if firm.state == 1 %}
                         <a href="{{ url('firms', {'action': 'delete', 'id': firm.id}) }}">
                         <button class="btn btn-outline btn-danger btn-xs" type="button">{{ translate('delete') }}</button>

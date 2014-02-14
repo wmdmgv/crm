@@ -30,7 +30,7 @@
             <input class="btn btn-default" type="reset" name="{{ name }}" value="{{ value|e }}">
         {% endif %}
     {% else %}
-        {% if type != 'hidden' %}{%  endif %}<input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" class="form-control{% if messages|length > 0 %} error{% endif %}" {% if options.placeholder %}placeholder="{{ options.placeholder }}"{% endif %} {% if attributes.required != '' %}required{%  endif %} {% if attributes.type != '' %}type="{{ attributes.type }}"{%  endif %} {% if attributes.pattern != '' %}pattern="{{ attributes.pattern }}"{%  endif %}/>
+        {% if type != 'hidden' %}{%  endif %}<input {% if options.disabled %}disabled{% endif %}  type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" class="form-control{% if messages|length > 0 %} error{% endif %}" {% if options.placeholder %}placeholder="{{ options.placeholder }}"{% endif %} {% if attributes.required != '' %}required{%  endif %} {% if attributes.type != '' %}type="{{ attributes.type }}"{%  endif %} {% if attributes.pattern != '' %}pattern="{{ attributes.pattern }}"{%  endif %}/>
     {% endif %}
 
     {% if type != 'hidden' %}

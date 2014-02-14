@@ -1,6 +1,6 @@
 <?php
 /**
- * Orders
+ * Invoice
  *
  */
 
@@ -13,11 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  * An example of how to implement a role aware user entity.
  *
  * @ORM\Entity
- * @ORM\Table(name="orders")
+ * @ORM\Table(name="invoices")
  *
  * @author Gleb Metlov <glebm@mail.ru>
  */
-class Order
+class Invoice
 {
     /**
      * @var int
@@ -29,7 +29,20 @@ class Order
 
     /**
      * @var type
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $order_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\MyApi\Entity\Order", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     */
+    private $order;
+
+
+    /**
+     * @var type
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $user_id;
 
@@ -41,7 +54,7 @@ class Order
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $firm_id;
 
@@ -53,7 +66,7 @@ class Order
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $client_id;
 
@@ -62,17 +75,6 @@ class Order
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Job", mappedBy="order", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
-     */
-    private $jobs;
-
-    /** //  unique=true
-     * @var string
-     * @ORM\Column(type="string", length=64)
-     */
-    protected $name;
 
     /**
      * @var string
@@ -93,28 +95,23 @@ class Order
     protected $amount;
 
     /**
+     * @var float
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    protected $balance;
+
+    /**
      * @var int
      * @ORM\Column(type="datetime", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
      */
     protected $created;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $invoice_id;
-    /**
-     * @ORM\OneToOne(targetEntity="\MyApi\Entity\Invoice", fetch="EAGER")
-     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
-     */
-    private $invoice;
-
-    /**
      * Initialies
      */
     public function __construct()
     {
-        $this->jobs = new \Doctrine\Common\Collections\ArrayCollection();
+
     }
 
     /**
@@ -137,6 +134,50 @@ class Order
     public function setId($id)
     {
         $this->id = (int) $id;
+    }
+
+    /**
+     * Get order_id.
+     *
+     * @return int
+     */
+    public function getOrder_Id()
+    {
+        return $this->order_id;
+    }
+
+    /**
+     * Set order_id.
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function setOrder_Id($order_id)
+    {
+        $this->order_id = (int) $order_id;
+    }
+
+    /**
+     * Get order.
+     *
+     * @return int
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set order.
+     *
+     * @param object $order
+     *
+     * @return void
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
     /**
@@ -262,28 +303,6 @@ class Order
     }
 
     /**
-     * Get username.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set username.
-     *
-     * @param string $username
-     *
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Get comment.
      *
      * @return string
@@ -339,7 +358,7 @@ class Order
     /**
      * Set amount.
      *
-     * @param float $amount
+     * @param float $price
      *
      * @return void
      */
@@ -349,82 +368,36 @@ class Order
     }
 
     /**
+     * Get balance.
+     *
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * Set balance.
+     *
+     * @param float $price
+     *
+     * @return void
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+    }
+
+    /**
      * Get created.
      *
-     * @return string
+     * @return datetime
      */
     public function getCreated()
     {
         return $this->created;
     }
-
-    /**
-     * Set created.
-     *
-     * @param string $created
-     *
-     * @return void
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * Get jobs.
-     *
-     * @return float
-     */
-    public function getJobs()
-    {
-        return $this->jobs;
-    }
-
-
-    /**
-     * Get invoice_id.
-     *
-     * @return int
-     */
-    public function getInvoice_Id()
-    {
-        return $this->invoice_id;
-    }
-
-    /**
-     * Set invoice_id.
-     *
-     * @param int $id
-     *
-     * @return void
-     */
-    public function setInvoice_Id($invoice_id)
-    {
-        $this->invoice_id = (int) $invoice_id;
-    }
-
-
-
-    /**
-     * Get invoice.
-     *
-     * @return int
-     */
-    public function getInvoice()
-    {
-        return $this->invoice;
-    }
-
-    /**
-     * Set invoice.
-     *
-     * @return int
-     */
-    public function setInvoice($invoice)
-    {
-        return $this->invoice = $invoice;
-    }
-
 
     /**
      * Helper function.

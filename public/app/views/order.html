@@ -7,7 +7,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-2">
-                                <h4 class="fl">Order №{{orderId}}</h4><b>{{ userName }} {{ userId }} {{(userId == 1) && 'disabled' || ''}}</b>
+                                <h4 class="fl">{{translate(curlng,'Order')}} №{{orderId}}</h4><b>{{ userName }} {{ userId }} {{(userId == 1) && 'disabled' || ''}}</b>
                             </div>
                             <div class="col-lg-9">
                                 <div class="progress progress-striped active" ng-hide="progressbar >= 100">
@@ -25,7 +25,7 @@
                         <div class="col-lg-6">
                             <input type="hidden" class="form-control" size="20" value="{{order.id}}" name="id">
                             <div class="form-group  form-element-firm_id">
-                                <label>Firm:</label>
+                                <label>{{translate(curlng,'firm')}}:</label>
                                 <select class="form-control" name="firm_id" ng-model="order.firm.id">
                                     <option>--- Select Firm ---</option>
                                     <option ng-repeat="firm in firms"   ng-selected="firm.id==order.firm.id"  value="{{firm.id}}">{{firm.name}}</option>
@@ -33,7 +33,7 @@
                                 </select>
                             </div>
                             <div class="form-group  form-element-name">
-                                <label class="fl">Client:{{ aaaa }}</label>
+                                <label class="fl">{{translate(curlng,'client')}}:</label>
                                 <!--<input type="text" list="listCities" placeholder="Enter your location.." >-->
                                 <!--<datalist id="listCities" ng-model="aaaa">-->
                                     <!--<option ng-repeat="client in clients | filter: searchparam" ng-selected="client.id==order.client.id"  value="{{client.id}}">{{client.name}}</option>-->
@@ -45,7 +45,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Name</label>
+                                <label>{{translate(curlng,'name')}}</label>
                                 <input placeholder="Enter name" class="form-control" ng-model='order.name'>
                             </div>
 
@@ -53,20 +53,23 @@
                         <div class="col-lg-3">
                             <fieldset disabled="">
                                 <div class="form-group">
-                                    <label for="disabledSelect">User: {{ order.user.id }}</label>
+                                    <label for="disabledSelect">{{translate(curlng,'user')}}: </label>
                                     <select class="form-control" id="disabledSelect" ng-model="order.user_id">
                                         <option ng-repeat="user in users" {{(userId == user.id) && 'selected' || ''}}  value="{{user.id}}">{{user.name}}</option>
                                     </select>
                                 </div>
                             </fieldset>
                             <div class="form-group">
-                                <label>Comment</label>
+                                <label>{{translate(curlng,'comment')}}</label>
                                 <textarea rows="3" class="form-control" ng-model="order.comment"></textarea>
                             </div>
+                            <label>{{ translate(curlng,'clientbalance') }}:
+                                <span class="btn btn-outline btn-default btn-xs" ng-click="reloadData()"><a href="/clients/edit/{{order.client.id}}" class="{{(order.client.balance > 0) && 'bgreen' || 'bred'}}" target="_blank">{{order.client.balance}}</a>&nbsp;&nbsp; <i class="fa fa-refresh"></i></span>
+                            </label>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
-                                <label for="disabledSelect">Status: {{order.state | json}}</label>
+                                <label for="disabledSelect">{{ translate(curlng,'status') }}: </label>
                                 <select class="form-control btn
                                     {{(order.state == 1) && 'btn-primary' || ''}}
                                     {{(order.state == 2) && 'btn-warning' || ''}}
@@ -74,19 +77,29 @@
                                     {{(order.state == 4) && 'btn-info' || ''}}
                                     {{(order.state == 5) && 'btn-danger' || ''}}
                                 btn-xs nobutton" ng-model="order.state" >
-                                    <option ng-repeat="stat in statuses" ng-selected="stat.id==order.state"  value="{{stat.id}}">{{stat.name}}</option>
+                                    <option ng-repeat="stat in statuses" ng-selected="stat.id==order.state"  value="{{stat.id}}">{{translate(curlng,stat.name)}}</option>
                                 </select>
                             </div>
-                            <label>Amount</label>
+                            <label>{{ translate(curlng,'amount') }}</label>
                             <div class="form-group input-group">
 
                                 <input placeholder="0.00" class="form-control" ng-model='order.amount'>
                                 <span class="input-group-addon">&#8372;</span>
                             </div>
-                            <label>Summ of Jobs</label>
-                            <div class="form-group input-group">
-                                <input placeholder="0.00" class="form-control w75" disabled ng-model='summa'>
-                                <button class="btn btn-default btn-circle" ng-click="saveSumma(summa)" type="button"><i class="fa fa-check"></i></button>
+                            <div ng-show="orderId">
+                                <div ng-hide="invoiceInfo">
+                                    <label>{{ translate(curlng,'invoiceadd') }}</label>
+                                    <div class="form-group input-group">
+                                        <input placeholder="0.00" class="form-control w75"  ng-model='invoice.amount'>
+                                        <button class="btn btn-default btn-circle" ng-click="saveInvoice()" type="button"><i class="fa fa-check"></i></button>
+                                    </div>
+                                </div>
+                                <div ng-show="invoiceInfo">
+                                    <label>{{ translate(curlng,'invoiceinfo') }}</label>
+                                    <div class="form-group input-group">
+                                        <input placeholder="0.00" class="form-control w75" disabled ng-model='invoiceInfo.amount'>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -95,7 +108,15 @@
                     <div class="panel panel-default" ng-show="orderId">
                         <div class="panel-heading">
 
-                                <label>Jobs:</label> <button ng-click="addJob()">+</button> <button ng-click="checkJob()">Reload</button>
+                                <label>{{translate(curlng,'Jobs')}}:</label> <button ng-click="addJob()">+</button> <button ng-click="checkJob()">Reload</button>
+
+                            <div class="fr"><span>{{ translate(curlng,'copytoamount') }}
+                                <input placeholder="0.00" class=" w75" disabled ng-model='summa'></span>
+
+                                <button class="btn btn-default btn-circle" ng-click="saveSumma(summa)" type="button"><i class="fa fa-check"></i></button>
+                            </div>
+                            <div class="fr"><label>{{ translate(curlng,'summajobs') }}:</label>
+                            </div>
 
                         </div>
                         <div class="panel-collapse in" id="collapseOne" style="height: auto;">
@@ -131,7 +152,7 @@
                                     {{(jobsArr[job.id].state == 4) && 'btn-info' || ''}}
                                     {{(jobsArr[job.id].state == 5) && 'btn-danger' || ''}}
                                 btn-xs nobutton" ng-model="jobsArr[job.id].state" ng-init="jobsArr[job.id].state=job.state" >
-                                            <option ng-repeat="stat in statuses" ng-selected="stat.id==jobsArr[job.id].state"  value="{{stat.id}}">{{stat.name}}</option>
+                                            <option ng-repeat="stat in statuses" ng-selected="stat.id==jobsArr[job.id].state"  value="{{stat.id}}">{{translate(curlng,stat.name)}}</option>
                                         </select>
                                     </div>
                                     <div class="col-md-1 mrnlr3"><button class="btn btn-success btn-outline btn-xs" ng-click="saveJob(job.id)">Save</button><button class="btn btn-outline btn-danger btn-xs" ng-click="delJob(job.id)">Del</button></div>

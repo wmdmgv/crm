@@ -242,6 +242,15 @@ class Module implements
      */
     public function getServiceConfig()
     {
+
+        return array('factories' => array(
+            'MyClient\Form\ClientForm' => function($sm) {
+                    $dbA  = $sm->get('Doctrine\ORM\EntityManager');  //'Zend\Db\Adapter\Adapter'
+                    $form = new \MyClient\Form\ClientForm($dbA);
+
+            return $form;
+            }
+        ));
         // TODO: Implement getServiceConfig() method.
     }
 }

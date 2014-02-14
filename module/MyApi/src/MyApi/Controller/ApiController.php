@@ -1,6 +1,8 @@
 <?php
 namespace MyApi\Controller;
 
+use Doctrine\ORM\ORMException;
+use Zend\Db\Exception\ErrorException;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -21,6 +23,7 @@ use Zend\Stdlib;
 use Application\Controller;
 
 use Zend\Filter;
+use ZendTest\XmlRpc\Server\Exception;
 
 class ApiController extends AbstractActionController
 {
@@ -46,6 +49,97 @@ class ApiController extends AbstractActionController
             3 => 3
         );
         $result = new JsonModel(array('role' => $roleId , 'name' => $userName, 'id' => $userId, 'firmuser' => $firmUser[$userId]));
+        return $result;
+    }
+
+    /** Get invoice object  for order
+     * @return JsonModel
+     */
+    public function invoiceAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $orderId = $this->params()->fromRoute('id');
+        // Check for raw post data
+        $plugin = $this->JSONParams();
+        $params = $plugin->fromJson();
+
+        if (!$orderId && isset($params['orderId'])) {
+            $orderId = $params['orderId'];
+        }
+
+        if (!$orderId) {
+            $result = new JsonModel(array(
+                    'result' => null,
+                    'total' => 0)
+            );
+            return $result;
+        }
+        /** @var \MyApi\Entity\Order $order */
+        $order = $objectManager->getRepository('MyApi\Entity\Order')->find($orderId);
+        if (!$order) {
+            throw new ErrorException('Нет такой записи');
+        }
+        // Check for invoice
+        /** @var \MyApi\Entity\Invoice $invoice */
+        $invoice = $objectManager->getRepository('MyApi\Entity\Invoice')->findOneBy(array('order_id' => $order->getId()));
+
+        if ($invoice) {
+            $invoice = $invoice->getArrayCopy();
+            $result = new JsonModel(array(
+                    'result' => $invoice,
+                    'total' => count($invoice))
+            );
+            return $result;
+        }
+
+        // IF POST data in JSON RAW
+        if ($params) {
+            $orderForm = $params['invoice'];
+            // Add
+            $user = $this->zfcUserAuthentication()->getIdentity();
+            // Add
+            $invoice = new \MyApi\Entity\Invoice();
+
+            $amount = $orderForm['amount'];
+            $invoice->setOrder($order);
+            $invoice->setUser($user);
+            $invoice->setState(1);
+            $invoice->setAmount($amount);
+            $invoice->setComment($orderForm['comment']);
+
+            // Get client with balance and sub amount
+            /** @var \MyClient\Entity\Client $client */
+            $client = $objectManager->getRepository('MyClient\Entity\Client')->find((int)$order->getClient_Id());
+            $balance = $client->getBalance();
+            $invoice->setClient($client);
+            if ($client->getUse_Balance() == 1) {
+                $balance = $balance - $amount;
+                $client->setBalance($balance);
+                try {
+                    $objectManager->persist($client);
+                    $objectManager->flush();
+                }
+                catch (\Exception $ex) {
+                    throw new ErrorException('Ошибка записи баланса клиента' . __LINE__);
+                }
+            }
+            $invoice->setBalance($balance);
+           // $invoice->setUpdated(new \DateTime("now"));
+
+            $objectManager->persist($invoice);
+            $objectManager->flush();
+
+
+            $order->setInvoice($invoice);
+            $objectManager->persist($order);
+            $objectManager->flush();
+            $invoice = $invoice->getArrayCopy();
+        }
+
+        $result = new JsonModel(array(
+                'result' => $invoice,
+                'total' => count($invoice))
+        );
         return $result;
     }
 
@@ -503,6 +597,12 @@ class ApiController extends AbstractActionController
             foreach ($jobs as $k => $v) {
                 $jbs[] = array('id' => $v->getId(), 'name' => $v->getName(), 'state' => $v->getState());
             }
+            //TODO: recomended to remove to much queries
+            $invoice = null;
+            if ($value->getInvoice_Id()) {
+                /** @var \MyApi\Entity\Invoice $invoice */
+                $invoice = $objectManager->getRepository('MyApi\Entity\Invoice')->find($value->getInvoice_Id());
+            }
             $data[] = array(
                 'id' => $value->getId(),
                 'name' => htmlspecialchars($value->getName()),
@@ -515,7 +615,9 @@ class ApiController extends AbstractActionController
                 'user_id' => $value->getUser_Id(),
                 'amount' => $value->getAmount(),
                 'jobs' => $jbs,
-                'jobs_cnt' => count($jbs)
+                'jobs_cnt' => count($jbs),
+                'invoice' => $value->getInvoice_Id(),
+                'invoice_amount' => ($invoice ? $invoice->getAmount() : "")
 
 
             );

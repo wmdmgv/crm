@@ -139,7 +139,9 @@ body {
 .fl {
     float:left !important;
 }
-
+.fr {
+    float:right !important;
+}
 .progress {
     margin-bottom: 0px !important;
 }
@@ -171,4 +173,15 @@ body {
     width:75px;
     padding-left:0px !important;
     padding-right:0px !important;
+}
+
+.bgreen {
+    color: green;
+}
+.bred {
+    color: red;
+}
+
+.txtrg {
+    text-align: right;
 }

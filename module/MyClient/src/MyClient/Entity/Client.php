@@ -97,7 +97,7 @@ class Client
      * @var int
      * @ORM\Column(type="integer", options={"default" = 1})
      */
-    protected $use_balance= 1;
+    protected $use_balance = 1;
 
     /**
      * Initialies

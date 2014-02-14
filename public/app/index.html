@@ -27,7 +27,7 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div class="header">
+    <div class="header" ng-hide="menuhide">
         <ul class="nav nav-pills pull-right">
             <li ng-class="{active: activetab=='/'}"><a ng-href="#">Home</a></li>
             <li ng-class="{active: activetab=='/list'}"><a ng-href="#/list/">Журнал</a></li>
@@ -74,6 +74,7 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/list.js"></script>
         <script src="scripts/controllers/job.js"></script>
+        <script src="scripts/controllers/invoice.js"></script>
         <!-- endbuild -->
 </body>
 </html>

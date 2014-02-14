@@ -15,14 +15,31 @@ angular.module('myApp')
     var ApiDevice = $resource('/api/devices')
     var ApiJob = $resource('/api/job/:jobId');
     var ApiJobs = $resource('/api/jobs/:orderId');
-    //if edit, then load order object and jobs
-    if ( $scope.orderId > 0) {
+    var ApiInvoice = $resource('/api/invoice/:orderId');
+
+    $scope.reloadData = function() {
+      $scope.progressbar = 10;
+      $scope.loadData();
+      $timeout(function() {
+        $scope.progressbar = 90;
+      }, 300);
+      $timeout(function() {
+        $scope.progressbar = 100;
+      }, 800);
+    }
+
+    $scope.loadData = function() {
       ApiOrder.get({'orderId': $scope.orderId}, function(data) {
         $scope.order = data.result;
         $scope.progressbar += 10;
         console.log(data);
         $scope.loadJobs();
       });
+    }
+
+    //if edit, then load order object and jobs
+    if ( $scope.orderId > 0) {
+      $scope.loadData();
     } else {
       //Wait for data
       function updateUserId() {
@@ -54,7 +71,7 @@ angular.module('myApp')
     });
     ApiClient.get({}, function(data) {
       $scope.clients = data.result;
-      $scope.progressbar += 40;
+      $scope.progressbar += 30;
     });
 
     ApiDevice.get({}, function(data) {
@@ -62,6 +79,36 @@ angular.module('myApp')
       $scope.progressbar += 10;
     });
 
+    $scope.invoice = {};
+    $scope.invoiceInfo = {};
+
+    $scope.loadInvoice = function() {
+      ApiInvoice.get({'orderId': $scope.orderId}, function(data) {
+        $scope.invoiceInfo = data.result;
+        $scope.progressbar += 10;
+      });
+    }
+    $scope.loadInvoice();
+
+    $scope.saveInvoice = function() {
+      if (confirm('Do you understand what you doing?')) {
+        $scope.invoice.comment = 'Снятие за заказ №' + $scope.orderId;
+        console.log($scope.invoice);
+        ApiInvoice.save({'orderId': $scope.orderId, invoice: $scope.invoice}, function(data) {
+          $scope.progressbar = 50;
+          $scope.invoiceInfo = data.result;
+          $scope.reloadData();
+//          $scope.order = data.result;
+//          $scope.orderId = $scope.order.id;
+          $timeout(function() {
+            $scope.progressbar = 90;
+          }, 300);
+          $timeout(function() {
+            $scope.progressbar = 100;
+          }, 800);
+        });
+      }
+    }
 //    $scope.master = {};
 //
 //    $scope.update = function(user) {
@@ -99,8 +146,7 @@ angular.module('myApp')
 
     $scope.loadJobs = function() {
       ApiJobs.get({'orderId': $scope.orderId}, function(data) {
-        //console.log(data.result);
-        $scope.jobs = data.result;
+         $scope.jobs = data.result;
         $scope.progressbar += 10;
         $timeout(function() {
           $scope.recalculateSumm();
@@ -174,6 +220,7 @@ angular.module('myApp')
 
     $scope.saveSumma = function(summa) {
       $scope.order.amount = summa;
+      $scope.invoice.amount = summa;
 
     }
     $scope.checkJob = function() {

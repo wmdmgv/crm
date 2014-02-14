@@ -75,7 +75,8 @@ class ClientController extends AbstractActionController
 
     public function addAction()
     {
-        $form = new \MyClient\Form\ClientForm();
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $form = new \MyClient\Form\ClientForm($objectManager);
         $form->get('submit')->setValue('Add');
 
 //        $form->add(array(
@@ -122,8 +123,6 @@ class ClientController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
                 $firm = $objectManager->getRepository('\MyFirm\Entity\Firm')->findOneBy(array('id' => $form->get("firm_id")->getValue()));
                 $user = $this->zfcUserAuthentication()->getIdentity();
 
@@ -133,9 +132,40 @@ class ClientController extends AbstractActionController
                 $client->setState(1);
                 $client->setUser($user);
                 $client->setFirm($firm);
+                if (!$client->getUse_Balance())
+                    $client->setUse_Balance(0);
+
+                // Get addmount
+                $formArr = $form->getData();
+                $amount = (float) str_replace(",",".",$formArr['addamount']);
+
+                $client->setBalance($amount);
 
                 $objectManager->persist($client);
                 $objectManager->flush();
+
+                if ($amount != 0) {
+
+                    // New Invoice to add amount
+                    $invoice = new \MyApi\Entity\Invoice();
+                    $user = $this->zfcUserAuthentication()->getIdentity();
+                    $invoice->setState(1);
+                    $invoice->setAmount($amount);
+                    $invoice->setClient($client);
+                    $invoice->setUser($user);
+                    $invoice->setBalance($amount);
+                    $invoice->setComment('Прямое начисление');
+
+                    $objectManager->persist($invoice);
+                    $objectManager->flush();
+
+                    $message = $amount . ' UAH succesfully added! <br>';
+                    $this->flashMessenger()->addMessage($message);
+                }
+
+
+
+
 
                 $message = 'Client succesfully saved!';
                 $this->flashMessenger()->addMessage($message);
@@ -160,15 +190,17 @@ class ClientController extends AbstractActionController
             return $this->redirect()->toRoute('clients');
         }
 
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
         // Create form.
-        $form = new \MyClient\Form\ClientForm();
+        $form = new \MyClient\Form\ClientForm($objectManager);
         $form->get('submit')->setValue('Save');
 
         $request = $this->getRequest();
         if (!$request->isPost()) {
 
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
+            /** @var \MyClient\Entity\Client $client */
             $client = $objectManager
                 ->getRepository('\MyClient\Entity\Client')
                 ->findOneBy(array('id' => $id));
@@ -177,10 +209,10 @@ class ClientController extends AbstractActionController
                 $this->flashMessenger()->addErrorMessage(sprintf('Client with id %s doesn\'t exists', $id));
                 return $this->redirect()->toRoute('clients');
             }
-
+            $invoices = $objectManager->getRepository('MyApi\Entity\Invoice')->findBy(array('client_id' => $client->getId()),  array('created' => 'DESC'));
             // Fill form data.
             $form->bind($client);
-            return array('form' => $form, 'id' => $id, 'client' => $client);
+            return array('form' => $form, 'id' => $id, 'client' => $client, 'invoices' => $invoices);
         }
         else {
             $form->setData($request->getPost());
@@ -199,13 +231,40 @@ class ClientController extends AbstractActionController
                         'action' => 'index'
                     ));
                 }
+                // Save current balance
+                $balance = $clientP->getBalance();
 
                 $clientP->exchangeArray($form->getData());
 
-                $clientP->setBalance(str_replace(",",".",$clientP->getBalance()));
+                // Get addmount
+                $formArr = $form->getData();
+                $amount = (float) str_replace(",",".",$formArr['addamount']);
+                if ($amount != 0) {
+                    $balance += $amount;
+                    // New Invoice to add amount
+                    $invoice = new \MyApi\Entity\Invoice();
+                    $user = $this->zfcUserAuthentication()->getIdentity();
+                    $invoice->setState(1);
+                    $invoice->setAmount($amount);
+                    $invoice->setClient($clientP);
+                    $invoice->setUser($user);
+                    $invoice->setBalance($balance);
+                    $invoice->setComment('Прямое начисление');
+
+                    $objectManager->persist($invoice);
+                    $objectManager->flush();
+
+                    $message = $amount . ' UAH succesfully added! <br>';
+                    $this->flashMessenger()->addMessage($message);
+
+
+                }
+                $clientP->setBalance($balance);
+
 
                 $objectManager->persist($clientP);
                 $objectManager->flush();
+
 
                 $message = 'Client succesfully saved!';
                 $this->flashMessenger()->addMessage($message);

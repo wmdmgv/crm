@@ -4,12 +4,37 @@ namespace MyClient\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
+use Zend\ServiceManager\ServiceManager;
 
 class ClientForm extends Form
 {
-    public function __construct($name = null)
+    protected $sm;
+
+    public function getClientOptions()
     {
+//        $data  = $this->clientTable->fetchAll()->toArray();
+//        $selectData = array();
+//
+//        foreach ($data as $key => $selectOption) {
+//            $selectData[$selectOption["id"]] = $selectOption["nom_client"];
+//        }
+//        return $selectData;
+
+        $data = $this->sm->getRepository('MyFirm\Entity\Firm')->findAll();
+        $selectData = array();
+        /** @var \MyFirm\Entity\Firm $row */
+        foreach ($data as $row) {
+            $selectData[$row->getId()] = $row->getName();
+        }
+
+        return $selectData;
+    }
+
+    public function __construct(\Doctrine\ORM\EntityManager $dbA)
+    {
+        $this->sm = $dbA;
         parent::__construct('client');
+
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new \MyClient\Form\ClientInputFilter());
         $this->add(array(
@@ -37,13 +62,14 @@ class ClientForm extends Form
             ),
             'options' => array(
                 'label' => 'Firm',
-                'empty_option'    => '--- Select Firm ---',
-                'value_options' => array(
-                    '6' => 'French',
-                    '1' => 'English',
-                    '2' => 'Japanese',
-                    '3' => 'Chinese',
-                ),
+                'empty_option' => '--- Select Firm ---',
+                'value_options' => $this->getClientOptions(),
+//                array(
+//                    '6' => 'French',
+//                    '1' => 'English',
+//                    '2' => 'Japanese',
+//                    '3' => 'Chinese',
+//                ),
             )
         ));
 
@@ -71,8 +97,8 @@ class ClientForm extends Form
             'attributes' => array(
                 'type' => 'tel',
                 'required' => 'required',
-                'pattern'  => '^\+[0-9]{3}-[0-9]{2}-[0-9]{7}$'
-             )
+                // 'pattern'  => '^\+[0-9]{3}-[0-9]{2}-[0-9]{7}$'
+            )
         ));
 
         $this->add(array(
@@ -115,9 +141,20 @@ class ClientForm extends Form
             'options' => array(
                 'label' => 'Balance',
                 'placeholder' => '0.00',
-                'default'     => '0.00'
+                'default' => '0.00',
+                'disabled' => true
             ),
         ));
+        $this->add(array(
+            'name' => 'addamount',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Add Amount',
+                'placeholder' => '0.00',
+                'default' => '0.00',
+            ),
+        ));
+
         $this->add(array(
             'name' => 'use_balance',
             'type' => 'Checkbox',

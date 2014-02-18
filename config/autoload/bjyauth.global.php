@@ -91,7 +91,7 @@ return array(
                 ),
                 array(
                     'controller' => 'MyApi\Controller\Api',
-                    'action' => array('order', 'job', 'jobs', 'invoice'),
+                    'action' => array('order', 'job', 'jobs', 'invoice', 'addclient', 'adddevice'),
                     'roles' => array('administrator','moderator','user')
                 ),
                 array(

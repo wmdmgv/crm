@@ -7,7 +7,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-lg-2">
-                                <h4 class="fl">{{translate(curlng,'Order')}} №{{orderId}}</h4><b>{{ userName }} {{ userId }} {{(userId == 1) && 'disabled' || ''}}</b>
+                                <h4 class="fl" title="{{ userName }} {{ userId }} {{(userId == 1) && 'disabled' || ''}}">{{translate(curlng,'Order')}} №{{orderId}}</h4><b></b>
                             </div>
                             <div class="col-lg-9">
                                 <div class="progress progress-striped active" ng-hide="progressbar >= 100">
@@ -39,7 +39,8 @@
                                     <!--<option ng-repeat="client in clients | filter: searchparam" ng-selected="client.id==order.client.id"  value="{{client.id}}">{{client.name}}</option>-->
                                 <!--</datalist>-->
                                 <input type="text" AUTOCOMPLETE="off" list="listCities" placeholder="Search..." class="form-control w250" size="20" ng-model="searchparam" value="" name="name">
-                                <button class="w30" disabled>+</button>
+                                <button ng-hide="orderId" data-target="#addClient" data-toggle="modal" class="btn btn-primary btn-outline btn-xs w30">+</button>
+                                <a ng-show="orderId" href="/clients/edit/{{order.client.id}}" target="_blank" class="btn btn-default btn-outline btn-xs">Открыть</a>
                                 <select class="form-control" required="" ng-model="order.client.id">
                                     <option ng-repeat="client in clients | filter: searchparam" ng-selected="client.id==order.client.id"  value="{{client.id}}">{{client.name}}</option>
                                 </select>
@@ -55,7 +56,7 @@
                                 <div class="form-group">
                                     <label for="disabledSelect">{{translate(curlng,'user')}}: </label>
                                     <select class="form-control" id="disabledSelect" ng-model="order.user_id">
-                                        <option ng-repeat="user in users" {{(userId == user.id) && 'selected' || ''}}  value="{{user.id}}">{{user.name}}</option>
+                                        <option ng-repeat="user in users"  ng-selected="order.user_id == user.id" value="{{user.id}}">{{user.name}}</option>
                                     </select>
                                 </div>
                             </fieldset>
@@ -135,7 +136,8 @@
 
                                         <input type="hidden" ng-model="jobsArr[job.id].id"  ng-init="jobsArr[job.id].id=job.id">
                                         <input type="text" AUTOCOMPLETE="off" placeholder="Search..." class="form-control w75" size="20" ng-model="searchp" value="" name="name">
-                                        <button class="w15" disabled>+</button>
+
+                                        <button  data-toggle="modal" class="btn btn-primary btn-outline btn-xs w15" ng-click="newDevice(job.id)">+</button>
                                         <select class="form-control w200" required="" ng-model="jobsArr[job.id].device_id" ng-init="jobsArr[job.id].device_id=job.device_id">
                                             <option ng-repeat="device in devices | filter: searchp" ng-selected="device.id==jobsArr[job.id].device_id"  value="{{device.id}}">{{device.name}}</option>
                                         </select>
@@ -168,6 +170,110 @@
                 </form>
             </div>
         </div>
+    </div>
+    <!--<button data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-lg" >-->
+        <!--Open Modal-->
+    <!--</button>-->
+    <!--<button ng-click="showModal('myModal')"></button>-->
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addClient" class="modal fade in" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 id="addClientLabel" class="modal-title">Новый клиент</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="" name="clienta" id="clienta">
+                        <div class="form-group  form-element-firm_id">
+                            <label>{{translate(curlng,'firm')}}:</label>
+                            <select class="form-control" name="firm_id" ng-model="order.firm.id" >
+                                <option>--- Select Firm ---</option>
+                                <option ng-repeat="firm in firms"   ng-selected="firm.id==order.firm.id"  value="{{firm.id}}">{{firm.name}}</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group  form-element-name">
+                            <label>{{translate(curlng,'Name')}}:</label>
+                            <input type="text" name="name" ng-model="aclient.name" size="20" class="form-control" required="">
+                        </div>
+                        <div class="form-group  form-element-phone">
+                            <label>{{translate(curlng,'Phone')}}:</label>
+                            <input type="tel" name="phone" ng-model="aclient.phone" size="20" class="form-control" >
+                        </div>
+                        <div class="form-group  form-element-email">
+                            <label>E-mail:</label>
+                            <input type="email" name="email" ng-model="aclient.email" size="20" class="form-control" >
+                        </div>
+                        <div class="form-group  form-element-address">
+                            <label>{{translate(curlng,'Address')}}:</label>
+                            <input type="text" name="address" ng-model="aclient.address" size="20" class="form-control">
+                        </div>
+                        <div class="form-group  form-element-comment">
+                            <label>{{translate(curlng,'Comment')}}:</label>
+                            <textarea name="comment" rows="3" size="20" ng-model="aclient.comment" class="form-control">{{client.comment|json}}</textarea>
+                        </div>
+                        <div class="form-group  form-element-state">
+                            <label>{{translate(curlng,'Active')}}:</label>
+                            <input type="checkbox" checked name="state" ng-model="aclient.state" value="1">
+                        </div>
+                        <div class="form-group  form-element-balance">
+                            <label>{{translate(curlng,'Balance')}}:</label>
+                            <input disabled="" type="text" name="balance" ng-model="aclient.balance" value="0.00" size="20" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="form-group  form-element-addamount">
+                            <label>{{translate(curlng,'Add Amount')}}:</label>
+                            <input type="text" name="addamount" ng-model="aclient.addamount" value="" size="20" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="form-group  form-element-use_balance">
+                            <label>{{translate(curlng,'Use Balance')}}:</label>
+                            <input type="checkbox" name="use_balance"  ng-model="aclient.use_balance" value="1" checked="checked">
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default" type="button" ng-click="hideModal('addClient')">{{translate(curlng,'Close')}}</button>
+                    <input class="btn btn-default" type="reset" name="reset" value="{{translate(curlng,'Reset')}}">
+                    <input  class="btn btn-primary" type="submit" ng-click="addClient()" value="{{translate(curlng,'Save')}}">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addDevice" class="modal fade in" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 id="addDeviceLabel" class="modal-title">Новое устройство</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="" name="devicea" id="devicea">
+                        <div class="form-group  form-element-name">
+                            <label>{{translate(curlng,'Name')}}:</label>
+                            <input type="text" name="name" ng-model="adevice.name" size="20" class="form-control" required="">
+                        </div>
+                        <div class="form-group  form-element-comment">
+                            <label>{{translate(curlng,'Comment')}}:</label>
+                            <textarea name="comment" rows="3" size="20" ng-model="adevice.comment" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group  form-element-state">
+                            <label>{{translate(curlng,'Active')}}:</label>
+                            <input type="checkbox" checked name="state" ng-model="adevice.state" value="1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default" type="button" ng-click="hideModal('addDevice')">{{translate(curlng,'Close')}}</button>
+                    <input class="btn btn-default" type="reset" name="reset" value="{{translate(curlng,'Reset')}}">
+                    <input  class="btn btn-primary" type="submit" ng-click="addDevice()" value="{{translate(curlng,'Save')}}">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
     <hr>
     <footer>

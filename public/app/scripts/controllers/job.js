@@ -1,7 +1,9 @@
 angular.module('myApp')
   .controller('JobCtrl', function($rootScope, $scope, $q, $resource, $http, $timeout, ngTableParams, $routeParams, Initial) {
     Initial();
-    $scope.order = {firm:{},state:0};
+    $scope.order = {firm:{},state:0, user_id:0, client: {}};
+    $scope.aclient = {};
+    $scope.adevice = {};
     $scope.jobsArr = {};
 
     $scope.orderId = $routeParams.orderId;
@@ -12,6 +14,8 @@ angular.module('myApp')
     var ApiUser = $resource('/api/users');
     var ApiStatus = $resource('/api/statuses');
     var ApiClient = $resource('/api/clients');
+    var ApiAddClient = $resource('/api/addclient');
+    var ApiAddDevice = $resource('/api/adddevice');
     var ApiDevice = $resource('/api/devices')
     var ApiJob = $resource('/api/job/:jobId');
     var ApiJobs = $resource('/api/jobs/:orderId');
@@ -45,11 +49,19 @@ angular.module('myApp')
       function updateUserId() {
         if ($rootScope.userId == undefined) {
           $timeout(updateUserId, 100);
+        } else {
+          //Setup default user
+//          console.log("aaaaaa1");
+//          $timeout(function() {
+//            $scope.order.user_id = $rootScope.userId;
+//            console.log("aaaaa2a");
+//            console.log($scope.order.user_id);
+//          }, 3000);
+          $scope.order.user_id = $rootScope.userId;
+
+          //Setup default Firm
+          $scope.order.firm.id = $rootScope.firmUser;
         }
-        //Setup default user
-        $scope.order.user_id = $rootScope.userId;
-        //Setup default Firm
-        $scope.order.firm.id = $rootScope.firmUser;
       }
       $timeout(updateUserId, 100);
       $scope.progressbar += 20;
@@ -247,6 +259,7 @@ angular.module('myApp')
           }, 800);
         });
       }
+
 //      for(var i in $scope.jobs){
 //        var el = $scope.jobs[i];
 //        if (el.number == number) {
@@ -260,6 +273,73 @@ angular.module('myApp')
 
       //$scope.jobs.push(newJob);
     };
+
+
+    // -------add client------------------------
+
+    $scope.addClient = function() {
+
+      $scope.aclient.firm_id = $scope.order.firm.id;
+      console.log("AAAAa");
+      console.log($scope.aclient);
+      if ($scope.aclient.firm_id == undefined) {
+        alert('Вы не выбрали фирму');
+        return false;
+      }
+      if ($scope.aclient.name == undefined || $scope.aclient.name == "") {
+        alert('Вы не ввели имя');
+        return false;
+      }
+
+      ApiAddClient.save({client: $scope.aclient}, function(data) {
+        if (data.result.id > 0) {
+          $scope.aclient = data.result;
+          // Reload clients
+          ApiClient.get({}, function(data) {
+            $scope.clients = data.result;
+            // Set new client in select
+            $scope.order.client.id = $scope.aclient.id;
+            $rootScope.hideModal('addClient');
+          });
+        }
+        if (data.error != "" && data.error != null) {
+          alert(data.error);
+        }
+      });
+    }
+
+    // -------add device------------------------
+    $scope.newDevice = function(jobId) {
+      $scope.curJob = jobId;
+      $scope.showModal('addDevice');
+    }
+
+    $scope.addDevice = function() {
+
+      if ($scope.adevice.name == undefined || $scope.adevice.name == "") {
+        alert('Вы не ввели имя');
+        return false;
+      }
+      console.log($scope.curJob);
+
+
+      ApiAddDevice.save({device: $scope.adevice}, function(data) {
+        if (data.result.id > 0) {
+          $scope.adevice = data.result;
+          // Reload devices
+          ApiDevice.get({}, function(data) {
+            $scope.devices = data.result;
+
+            // Set new client in select
+            $scope.jobsArr[$scope.curJob].device_id = $scope.adevice.id
+            $rootScope.hideModal('addDevice');
+          });
+        }
+        if (data.error != "" && data.error != null) {
+          alert(data.error);
+        }
+      });
+    }
 
 //    $scope.tableOrders = new ngTableParams({
 //      page: 1,            // show first page

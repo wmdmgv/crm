@@ -21,7 +21,7 @@ class ClientController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $page = $this->params()->fromRoute('page');
-        $max = 5;
+        $max = 15;
 
         //---Paging with query
         $query = $objectManager->createQuery('SELECT f FROM \MyClient\Entity\Client f ORDER by f.state DESC, f.id ASC');

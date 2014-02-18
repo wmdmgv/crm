@@ -1,5 +1,5 @@
 angular.module('myApp')
-  .controller('ListCtrl', function($scope, $resource, $q, $http, $timeout, ngTableParams, Initial) {
+  .controller('ListCtrl', function($rootScope, $scope, $resource, $q, $http, $timeout, ngTableParams, Initial) {
     Initial();
     var ApiOrders = $resource('/api/orders');
     var ApiStatus = $resource('/api/statuses');
@@ -7,6 +7,17 @@ angular.module('myApp')
     var ApiUser = $resource('/api/users');
     var ApiClient = $resource('/api/clients');
 
+
+
+    $scope.recheck = function () {
+      $timeout(function() {
+        console.log("AAAAA");
+        $rootScope.roleChecked = false;
+        $rootScope.checkRole(1);
+        $scope.recheck();
+      }, 10000);
+    }
+    $scope.recheck();
 
     ApiStatus.get({}, function(data) {
       $scope.statuses = data.result;
@@ -84,7 +95,7 @@ angular.module('myApp')
       page: 1,            // show first page
       count: 25,          // count per page
       sorting: {
-        name: 'asc'     // initial sorting
+        created: 'desc'     // initial sorting
       }
     }, {
       total: 0,           // length of data

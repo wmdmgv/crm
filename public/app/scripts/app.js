@@ -93,9 +93,21 @@ angular.module('myApp', [
        array('id' => 5, 'name' => $translate('WTF?'))
        */
       var dict = {
+        'Save' : {'ru' : 'Сохранить', 'en' : 'Save'},
+        'Reset' : {'ru' : 'Сбросить', 'en' : 'Reset'},
+        'Close' : {'ru' : 'Закрыть', 'en' : 'Close'},
         'view' : {'ru' : 'Просмотр', 'en' : 'View'},
         'Order' : {'ru' : 'Заказ', 'en' : 'Order'},
         'firm' : {'ru' : 'Фирма', 'en' : 'Firm'},
+        'Name' : {'ru' : 'Имя', 'en' : 'Name'},
+        'Phone' : {'ru' : 'Телефон', 'en' : 'Phone'},
+        'Address' : {'ru' : 'Адрес', 'en' : 'Address'},
+        'Comment' : {'ru' : 'Комментарий', 'en' : 'Comment'},
+        'Active' : {'ru' : 'Активный', 'en' : 'Active'},
+        'Balance' : {'ru' : 'Баланс', 'en' : 'Balance'},
+        'Add Amount' : {'ru' : 'Добавить сумму', 'en' : 'Add Amount'},
+        'Use Balance' : {'ru' : 'Использовать баланс', 'en' : 'Use Balance'},
+
         'client' : {'ru' : 'Клиент', 'en' : 'Client'},
         'name' : {'ru' : 'Название', 'en' : 'Name'},
         'comment' : {'ru' : 'Комментарий', 'en' : 'Comment'},
@@ -142,6 +154,13 @@ angular.module('myApp', [
 //        $rootScope.roleChecked = true;
 //      }
 //    }
+
+    $rootScope.showModal = function(id) {
+      $('#'+id).modal('show');
+    }
+    $rootScope.hideModal = function(id) {
+      $('#'+id).modal('hide');
+    }
 
   }])
 ;

@@ -52,6 +52,144 @@ class ApiController extends AbstractActionController
         return $result;
     }
 
+
+    /** Add device
+     * @return JsonModel
+     */
+    public function adddeviceAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+        // Check for raw post data
+        $plugin = $this->JSONParams();
+        $params = $plugin->fromJson();
+        $device = array();
+        $error = null;
+
+        // IF POST data in JSON RAW
+        if ($params) {
+            $orderForm = $params['device'];
+
+            $device = new \MyDevice\Entity\Device();
+
+            if (!isset($orderForm['state'])){
+                $orderForm['state'] = 0;
+            }
+
+            $device->exchangeArray($orderForm);
+
+            try {
+                $objectManager->persist($device);
+                $objectManager->flush();
+            } catch (\Exception $ex) {
+                $error = $ex->getMessage();
+                if (strpos($error, 'Duplicate entry ')) {
+                    $error = 'Такое имя уже существует!';
+                }
+            }
+        }
+
+        $device = $device->getArrayCopy();
+
+        $result = new JsonModel(array(
+                'result' => $device,
+                'total' => count($device),
+                'error' => $error)
+        );
+        return $result;
+    }
+
+    /** Add client
+     * @return JsonModel
+     */
+    public function addclientAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+        // Check for raw post data
+        $plugin = $this->JSONParams();
+        $params = $plugin->fromJson();
+        $client = array();
+        $error = null;
+
+        // IF POST data in JSON RAW
+        if ($params) {
+            $orderForm = $params['client'];
+
+            $firm = $objectManager->getRepository('\MyFirm\Entity\Firm')->findOneBy(array('id' => $orderForm['firm_id']));
+            $user = $this->zfcUserAuthentication()->getIdentity();
+
+            $client = new \MyClient\Entity\Client();
+            if (!isset($orderForm['use_balance'])){
+                $orderForm['use_balance'] = 0;
+            }
+
+            if (!isset($orderForm['state'])){
+                $orderForm['state'] = 0;
+            }
+
+            $client->exchangeArray($orderForm);
+
+            //$client->setState(1);
+            if (!$client->getEmail())
+                $client->setEmail("");
+            if (!$client->getPhone())
+                $client->setPhone("");
+            if (!$client->getAddress())
+                $client->setAddress("");
+            $client->setUser($user);
+            $client->setFirm($firm);
+
+            // Get addmount
+            $amount = isset($orderForm['addamount']) ? (float) str_replace(",",".",$orderForm['addamount']) : 0;
+
+            $client->setBalance($amount);
+            try {
+            $objectManager->persist($client);
+            $objectManager->flush();
+            } catch (\Exception $ex) {
+               $error = $ex->getMessage();
+               if (strpos($error, 'Duplicate entry ')) {
+                   $error = 'Такое имя уже существует!';
+               }
+            }
+
+            if ($amount != 0) {
+
+                // New Invoice to add amount
+                $invoice = new \MyApi\Entity\Invoice();
+                $invoice->setState(1);
+                $invoice->setAmount($amount);
+                $invoice->setClient($client);
+                $invoice->setUser($user);
+                $invoice->setBalance($amount);
+                $invoice->setComment('Прямое начисление');
+
+                $objectManager->persist($invoice);
+                $objectManager->flush();
+
+            }
+
+
+
+
+        }
+       //   var_dump($client);
+//        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+//        $job = $objectManager->getRepository('MyApi\Entity\Job')->find($jobId);
+//
+//        $job->order = $job->order->getArrayCopy();
+//        $job->device = $job->device->getArrayCopy();
+        $client = $client->getArrayCopy();
+
+        $result = new JsonModel(array(
+                'result' => $client,
+                'total' => count($client),
+                'error' => $error)
+        );
+        return $result;
+    }
+
     /** Get invoice object  for order
      * @return JsonModel
      */
@@ -437,7 +575,7 @@ class ApiController extends AbstractActionController
         foreach ($list as $key => $user) {
             $data[] = array(
                 'id' => $user->getId(),
-                'name' => htmlspecialchars($user->getUsername())
+                'name' => ($user->getUsername() ? htmlspecialchars($user->getUsername()) : $user->getEmail() )
             );
         }
         $result = new JsonModel(array(

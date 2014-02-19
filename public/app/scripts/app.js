@@ -76,6 +76,8 @@ angular.module('myApp', [
             if(response.status === 502 && !$rootScope.stopped) {
               $rootScope.stopped = true;
               alert("PHP упал, надо рестартовать\n после этого обновите страницу");
+            } else if(response.status === 403 && !$rootScope.stopped) {
+              location.href = "/user/login";
             } else if (!$rootScope.stopped) {
               $rootScope.stopped = true;
               $(".container").html("<pre>" + response.data + "</pre>");

@@ -1,49 +1,48 @@
 {{checkRole(1)}}
-<button ng-click="tableOrders.reload()" class="btn btn-default">Reload</button>
+<button ng-click="tableOrders.reload()" class="btn btn-default btn-outline btn-xs"><i class="fa fa-refresh"></i></button>
 
-<button ng-click="tableOrders.sorting({})" class="btn btn-default pull-right">Clear sorting</button>
-<button ng-click="tableOrders.filter({})" class="btn btn-default pull-right">Clear filter</button>
+<button ng-click="tableOrders.sorting({})" class="btn btn-default  btn-outline btn-xs pull-right">Очистить сортировку</button>
+<button ng-click="tableOrders.filter({})" class="btn btn-default  btn-outline btn-xs pull-right">Очистить фильтры</button>
 
 <div class="clearfix"></div>
 <div loading-container="tableOrders.settings().$loading">
     <table ng-table="tableOrders" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="order in $data">
-            <td data-title="'Id'" filter="{ 'id': 'text' }"  sortable="'id'" >
+            <td data-title="translate(curlng,'ID')" filter="{ 'id': 'text' }"  sortable="'id'" >
                 {{order.id }}
             </td>
-            <td data-title="'Date'" filter="{ 'created': 'text' }"  sortable="'created'" >
+            <td data-title="translate(curlng,'Date')" filter="{ 'created': 'text' }"  sortable="'created'" >
                 {{order.created }}
             </td>
-            <td data-title="'Name'" filter="{ 'name': 'text' }"  sortable="'name'" >
+            <td data-title="translate(curlng,'Name')" filter="{ 'name': 'text' }"  sortable="'name'" >
                 {{order.name}}
                 {{$loading}}
             </td>
-            <td data-title="'Firm'" filter="{ 'firm_id': 'firm' }"  sortable="'firm_id'" >
+            <td data-title="translate(curlng,'Firm')" filter="{ 'firm_id': 'firm' }"  sortable="'firm_id'" >
                 {{order.firm }}
             </td>
-            <td data-title="'Client'" filter="{ 'client_id': 'client' }"  sortable="'client_id'" >
+            <td data-title="translate(curlng,'Client')" filter="{ 'client_id': 'client' }"  sortable="'client_id'" >
                 {{order.client }}
             </td>
-            <td data-title="'User'" filter="{ 'user_id': 'user' }"  sortable="'user_id'" >
+            <td data-title="translate(curlng,'User')" filter="{ 'user_id': 'user' }"  sortable="'user_id'" >
                 {{order.user }}
             </td>
-            <td data-title="'Amount'" filter="{ 'amount': 'text' }"  sortable="'amount'" class="txtrg">
+            <td data-title="translate(curlng,'Amount')" filter="{ 'amount': 'text' }"  sortable="'amount'" class="txtrg">
                 <span class="{{(order.invoice > 0) && 'bgreen' || ''}}" title="Invoice:{{order.invoice}} | Amount: {{ order.invoice_amount }}"  >{{order.amount}} </span>
 
             </td>
-            <td data-title="'State'" filter="{ 'state': 'status' }"  sortable="'state'" >
+            <td data-title="translate(curlng,'State')" filter="{ 'state': 'status' }"  sortable="'state'" >
                 <span class="form-control btn
                     {{(order.state == 1) && 'btn-primary' || ''}}
                     {{(order.state == 2) && 'btn-warning' || ''}}
                     {{(order.state == 3) && 'btn-success' || ''}}
                     {{(order.state == 4) && 'btn-info' || ''}}
                     {{(order.state == 5) && 'btn-danger' || ''}}
-                    btn-xs nobutton" >
-                    {{statuses[order.state].name}}
+                    btn-xs nobutton" >{{translate(curlng,statuses[order.state].name)}}
                 </span>
             </td>
-            <td data-title="'Jobs State'" nowrap class="jbsstate"  >
+            <td data-title="translate(curlng,'Jobs State')" nowrap class="jbsstate"  >
 
                 <span ng-repeat="job in order.jobs"  style="padding:0px;float:left;height:15px;width:{{getWidth(order.jobs_cnt)}}px;"
                      class="{{(job.state == 1) && 'btn-primary' || ''}}
@@ -53,7 +52,7 @@
                 {{(job.state == 5) && 'btn-danger' || ''}}
                 btn-xs nobutton"></span>
             </td>
-            <td data-title="'Action'"> <a href="#/edit/{{ order.id  }}"><button class="btn btn-success btn-outline btn-xs" type="button">{{ translate('ru','view') }}</button></a>
+            <td data-title="translate(curlng,'Action')"> <a href="#/edit/{{ order.id  }}"><button class="btn btn-success btn-outline btn-xs" type="button">{{ translate('ru','view') }}</button></a>
             </td>
         </tr>
         </tbody>
@@ -70,7 +69,7 @@
                                     {{(params.filter()[name] == 5) && 'btn-danger' || ''}}
                                 btn-xs nobutton" ng-model="params.filter()[name]" ng-init="" >
         <option  value="">-</option>
-        <option ng-repeat="stat in statuses" ng-selected="stat.id==params.filter()[name]"  value="{{stat.id}}">{{stat.name}}</option>
+        <option ng-repeat="stat in statuses" ng-selected="stat.id==params.filter()[name]"  value="{{stat.id}}">{{translate(curlng,stat.name)}}</option>
     </select>
 </script>
 <script type="text/ng-template" id="ng-table/filters/firm.html">

@@ -55,6 +55,7 @@ angular.module('myApp', [
       //    // Check login
       var Api = $resource('/api');
       $rootScope.roleChecked = false;
+      $rootScope.stopped = false;
       $rootScope.checkRole = function (role) {
         if (!$rootScope.roleChecked) {
           Api.get({}, function(data) {
@@ -70,7 +71,27 @@ angular.module('myApp', [
               location.href = "/user/login";
             }
 
+          }, function(response) {
+            //404 or bad
+            if(response.status === 502 && !$rootScope.stopped) {
+              $rootScope.stopped = true;
+              alert("PHP упал, надо рестартовать\n после этого обновите страницу");
+            } else if (!$rootScope.stopped) {
+              $rootScope.stopped = true;
+              $(".container").html("<pre>" + response.data + "</pre>");
+            }
+
           });
+
+          /*
+           Word.get({ id : $routeParams.id }, function() {
+           //good code
+           }, function(response) {
+           //404 or bad
+           if(response.status === 404) {
+           }
+           });
+           */
           $rootScope.roleChecked = true;
         }
       }
@@ -93,11 +114,20 @@ angular.module('myApp', [
        array('id' => 5, 'name' => $translate('WTF?'))
        */
       var dict = {
+        'ID' : {'ru' : 'ID', 'en' : 'ID'},
+        'Date' : {'ru' : 'Дата', 'en' : 'Date'},
         'Save' : {'ru' : 'Сохранить', 'en' : 'Save'},
         'Reset' : {'ru' : 'Сбросить', 'en' : 'Reset'},
         'Close' : {'ru' : 'Закрыть', 'en' : 'Close'},
         'view' : {'ru' : 'Просмотр', 'en' : 'View'},
         'Order' : {'ru' : 'Заказ', 'en' : 'Order'},
+        'Firm' : {'ru' : 'Фирма', 'en' : 'Firm'},
+        'Client' : {'ru' : 'Клиент', 'en' : 'Client'},
+        'User' : {'ru' : 'Сотрудник', 'en' : 'User'},
+        'Amount' : {'ru' : 'Сумма', 'en' : 'Amount'},
+        'State' : {'ru' : 'Статус', 'en' : 'State'},
+        'Jobs State' : {'ru' : 'Работы', 'en' : 'Jobs State'},
+        'Action' : {'ru' : 'Действия', 'en' : 'Action'},
         'firm' : {'ru' : 'Фирма', 'en' : 'Firm'},
         'Name' : {'ru' : 'Имя', 'en' : 'Name'},
         'Phone' : {'ru' : 'Телефон', 'en' : 'Phone'},

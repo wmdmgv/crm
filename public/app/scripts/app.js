@@ -30,6 +30,10 @@ angular.module('myApp', [
         templateUrl: 'views/invoices.html',
         controller: 'InvoiceCtrl'
       })
+      .when('/comp', {
+        templateUrl: 'views/comp.html',
+        controller: 'CompCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -116,6 +120,11 @@ angular.module('myApp', [
        array('id' => 5, 'name' => $translate('WTF?'))
        */
       var dict = {
+        'Comp' : {'ru' : 'Сборка компьютера', 'en' : 'Computer components'},
+        'compdetails' : {'ru' : 'Детали', 'en' : 'Details'},
+        'Computer detail' : {'ru' : 'Деталь компьютера', 'en' : 'Computer details'},
+
+
         'ID' : {'ru' : 'ID', 'en' : 'ID'},
         'Date' : {'ru' : 'Дата', 'en' : 'Date'},
         'Save' : {'ru' : 'Сохранить', 'en' : 'Save'},

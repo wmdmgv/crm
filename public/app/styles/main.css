@@ -130,6 +130,11 @@ body {
     width: 75px !important;
     float: left !important;
 }
+.w50 {
+    width: 50px !important;
+    float: left !important;
+    text-align: right;
+}
 .w30 {
     width: 30px !important;
 }

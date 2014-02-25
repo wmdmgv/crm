@@ -612,8 +612,11 @@ class ApiController extends AbstractActionController
      */
     public function devicesAction()
     {
+        $uri = UriFactory::factory($_SERVER['REQUEST_URI'])->getQueryAsArray();
+        $type = $uri['type'];
+
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $list = $objectManager->getRepository('MyDevice\Entity\Device')->findAll();;
+        $list = $objectManager->getRepository('MyDevice\Entity\Device')->findBy(array('type' => ($type ? $type : 0)));
         $data = array();
         /** @var \MyClient\Entity\Client $device */
         foreach ($list as $key => $device) {

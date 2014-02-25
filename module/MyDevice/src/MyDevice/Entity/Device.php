@@ -30,6 +30,13 @@ class Device
     protected $id;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", options={"default" = 0})
+     */
+    protected $type = 0;
+
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=64, unique=true)
      */
@@ -46,6 +53,8 @@ class Device
      * @ORM\Column(type="integer", options={"default" = 1})
      */
     protected $state = 1;
+
+
 
     /**
      * Initialies
@@ -76,6 +85,29 @@ class Device
     {
         $this->id = (int) $id;
     }
+
+    /**
+     * Get type.
+     *
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set type.
+     *
+     * @param int $type
+     *
+     * @return void
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
 
     /**
      * Get username.

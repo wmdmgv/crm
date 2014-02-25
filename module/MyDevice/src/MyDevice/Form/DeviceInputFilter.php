@@ -49,5 +49,10 @@ class DeviceInputFilter extends InputFilter
             'name' => 'state',
             'required' => false,
         ));
+
+        $this->add(array(
+            'name' => 'type',
+            'required' => false,
+        ));
     }
 }

@@ -1,0 +1,149 @@
+{{checkRole(1)}}
+<div class="container">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <form id="client" name="client" action="" method="post">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h4 class="fl" title="{{ userName }} {{ userId }} {{(userId == 1) && 'disabled' || ''}}">{{translate(curlng,'Comp')}}</h4><b></b>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="progress progress-striped active" ng-hide="progressbar >= 100">
+                                <div style="width: {{progressbar}}%" aria-valuemax="100" aria-valuemin="0"
+                                     aria-valuenow="{{progressbar}}" role="progressbar"
+                                     class="progress-bar progress-bar-success">
+                                    <span class="">{{progressbar}}% Complete (success)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+
+                            <label>{{translate(curlng,'compdetails')}}:</label> <button ng-click="addJob()">+</button> <button ng-click="checkJob()">Заново</button>
+
+                            <div class="fr">
+                                <span><input placeholder="20" class=" w50"  ng-model='procent' ng-init="procent=20"></span>
+                            </div>
+                            <div class="fr"><label>Процент:</label>
+                            </div>
+                            <div class="fr">
+                                <span>&nbsp;<input placeholder="1" class=" w50"  ng-model='kurs' ng-init="kurs=1"></span>
+                            </div>
+                            <div class="fr"><label>Курс:</label>
+                            </div>
+                        </div>
+                        <div class="panel-collapse in" id="collapseOne" style="height: auto;">
+                            <div class="panel-body" ng-init="key=0">
+                                <div class="row show-grid" >
+                                    <div class="col-md-3 mrnlr3" >Устройство</div>
+                                    <div class="col-md-3 mrnlr3" >Название</div>
+                                    <div class="col-md-1 mrnlr3" >S/N</div>
+                                    <div class="col-md-1 mrnlr3" >Количество</div>
+                                    <div class="col-md-1 mrnlr3" >Цена вх</div>
+                                    <div class="col-md-1 mrnlr3" >Сумма вх</div>
+                                    <div class="col-md-1 mrnlr3" >Цена розн</div>
+                                    <div class="col-md-1 mrnlr3" >Сумма розн</div>
+                                </div>
+                                <div class="row show-grid" ng-repeat="job in jobs" ng-init="jobsArr[job.id]={}" >
+
+                                    <div class="col-md-3 mrnlr3" title="{{job.id}}"><div style="width:20px;float:left;">{{key}}</div>
+
+                                        <input type="hidden" ng-model="jobsArr[job.id].id"  ng-init="jobsArr[job.id].id=job.id">
+
+
+                                        <button  data-toggle="modal" class="btn btn-primary btn-outline btn-xs w15" ng-click="newDevice(job.id)">+</button>
+                                        <select class="form-control w200" required="" ng-model="jobsArr[job.id].device_id" ng-init="jobsArr[job.id].device_id=job.device_id">
+                                            <option ng-repeat="device in devices | filter: searchp" ng-selected="device.id==jobsArr[job.id].device_id"  value="{{device.id}}">{{device.name}}</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-3 mrnlr3" ><input type="text" class="w250" ng-model="jobsArr[job.id].name"  ng-init="jobsArr[job.id].name=job.name"></div>
+                                    <div class="col-md-1 mrnlr3"><input type="text" class="w75" ng-model="jobsArr[job.id].sn"  ng-init="jobsArr[job.id].sn=job.sn"></div>
+                                    <div class="col-md-1 mrnlr3"><input type="text" class="w50" ng-model="jobsArr[job.id].kolvo"  ng-init="jobsArr[job.id].kolvo=job.kolvo"></div>
+                                    <div class="col-md-1 mrnlr3"><input type="text" class="w50" ng-model="jobsArr[job.id].pricein"  ng-init="jobsArr[job.id].pricein=job.price"></div>
+                                    <div class="col-md-1 mrnlr3" ><input type="text" disabled class="clprice" ng-model="jobsArr[job.id].summin"  ng-init="jobsArr[job.id].summin=job.price"></div>
+                                    <div class="col-md-1 mrnlr3"><input type="text" disabled class="w50" ng-model="jobsArr[job.id].priceout"  ng-init="jobsArr[job.id].priceout=job.price"> </div>
+                                    <div class="col-md-1 mrnlr3"><input type="text" disabled class="w50" ng-model="jobsArr[job.id].summout"  ng-init="jobsArr[job.id].summout=job.price"></div>
+                                </div>
+                                <div class="row show-grid" >
+                                    <div class="col-md-3 mrnlr3" >&nbsp;</div>
+                                    <div class="col-md-3 mrnlr3" >&nbsp;</div>
+                                    <div class="col-md-1 mrnlr3" >&nbsp;</div>
+                                    <div class="col-md-1 mrnlr3" >&nbsp;</div>
+                                    <div class="col-md-1 mrnlr3 txtrg" >&nbsp;<b>Итого:</b></div>
+                                    <div class="col-md-1 mrnlr3" ><input type="text" disabled class="w50" ng-model="totalsummin"></div>
+                                    <div class="col-md-1 mrnlr3 txtrg" >&nbsp;<b>Итого:</b></div>
+                                    <div class="col-md-1 mrnlr3" ><input type="text" disabled class="w50" ng-model="totalsummout"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <input type="button" ng-click="update()" value="Save" name="submit" class="btn btn-default">
+                    <input type="button" ng-click="printComp()" value="Печать заказа" name="submit" class="btn btn-default pull-right">
+                    <input type="button" ng-click="printGarant()" value="Печать гарантийки" name="submit" class="btn btn-default pull-right">
+                    <a href="/app/" class="btn btn-default">{{translate(curlng,'Close')}}</a>
+                    <!--<input type="reset" ng-click="reset()" value="Reset" name="reset" class="btn btn-default pull-right">-->
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--<button data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-lg" >-->
+<!--Open Modal-->
+<!--</button>-->
+<!--<button ng-click="showModal('myModal')"></button>-->
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addDevice" class="modal fade in" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 id="addDeviceLabel" class="modal-title">Новое устройство</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="" name="devicea" id="devicea">
+                    <div class="form-group  form-element-name">
+                        <label>{{translate(curlng,'Name')}}:</label>
+                        <input type="text" name="name" ng-model="adevice.name" size="20" class="form-control" required="">
+                    </div>
+                    <div class="form-group  form-element-comment">
+                        <label>{{translate(curlng,'Comment')}}:</label>
+                        <textarea name="comment" rows="3" size="20" ng-model="adevice.comment" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group  form-element-state">
+                        <label>{{translate(curlng,'Active')}}:</label>
+                        <input type="checkbox" checked name="state" ng-model="adevice.state" value="1">
+                    </div>
+                    <div class="form-group  form-element-state">
+                        <label>{{translate(curlng,'Computer detail')}}:</label>
+                        <input type="checkbox" checked name="state" ng-model="adevice.type" value="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button" ng-click="hideModal('addDevice')">{{translate(curlng,'Close')}}</button>
+                <input class="btn btn-default" type="reset" name="reset" value="{{translate(curlng,'Reset')}}">
+                <input  class="btn btn-primary" type="submit" ng-click="addDevice()" value="{{translate(curlng,'Save')}}">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<hr>
+<footer>
+    <p>&copy; 2014 by <a title="clients" href="mailto:glebm@mail.ru">WMD</a>. Все права защищены. [<a href="/application/locale/ru">ru</a> | <a href="/application/locale/en">en</a>]</p>
+</footer>
+</div>
+
+
+
+

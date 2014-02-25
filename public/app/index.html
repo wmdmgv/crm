@@ -29,6 +29,7 @@
     <![endif]-->
     <div class="header" ng-hide="menuhide">
         <ul class="nav nav-pills pull-right">
+            <li ng-class="{active: activetab=='/comp'}"><a ng-href="#/comp/">Комп</a></li>
             <li ng-class="{active: activetab=='/'}"><a ng-href="#">Журнал</a></li>
             <!--<li ng-class="{active: activetab=='/list'}"><a ng-href="#/list/">Журнал</a></li>-->
             <li ng-class="{active: activetab=='/new'}"><a ng-href="#/new/">Новый</a></li>
@@ -75,6 +76,7 @@
         <script src="scripts/controllers/list.js"></script>
         <script src="scripts/controllers/job.js"></script>
         <script src="scripts/controllers/invoice.js"></script>
+        <script src="scripts/controllers/comp.js"></script>
         <!-- endbuild -->
 </body>
 </html>

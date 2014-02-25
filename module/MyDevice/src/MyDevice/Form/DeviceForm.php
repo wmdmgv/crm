@@ -45,6 +45,13 @@ class DeviceForm extends Form
             ),
         ));
         $this->add(array(
+            'name' => 'type',
+            'type' => 'Checkbox',
+            'options' => array(
+                'label' => 'Computer details',
+            ),
+        ));
+        $this->add(array(
             'name' => 'submit',
             'type' => 'Submit',
             'attributes' => array(
